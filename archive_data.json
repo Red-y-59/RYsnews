@@ -248,6 +248,23 @@
   ],
   "editions": [
     {
+      "id": "ed_mwdq0234zdxi",
+      "publisherId": "pub_nikkan",
+      "kind": "个人",
+      "categoryId": "sub_mwdci8m9wtxu",
+      "eventId": "evt_mwdck3y6yklt",
+      "title": "测试",
+      "deadline": "",
+      "productType": "便利店打印",
+      "productCode": "",
+      "sourceUrl": "",
+      "notes": "",
+      "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/ed_mwdq0234zdxi.jpg",
+      "inPrintList": false,
+      "printed": false,
+      "createdAt": 1794498377872
+    },
+    {
       "id": "ed_mwdokmvoygrs",
       "publisherId": "pub_mwdk20zibepw",
       "kind": "个人",
