@@ -483,8 +483,9 @@
     }
 
     async function ghGetFileSha(repo, branch, path, token) {
-      const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+      const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}&_=${Date.now()}`;
       const res = await fetch(url, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/vnd.github+json'
@@ -496,13 +497,14 @@
       return data.sha || null;
     }
 
-    async function ghPutFile(repo, branch, path, base64Content, message, token) {
+    async function ghPutFile(repo, branch, path, base64Content, message, token, retry = true) {
       const sha = await ghGetFileSha(repo, branch, path, token);
       const url = `https://api.github.com/repos/${repo}/contents/${path}`;
       const body = { message, content: base64Content, branch };
       if (sha) body.sha = sha;
       const res = await fetch(url, {
         method: 'PUT',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/vnd.github+json',
@@ -510,6 +512,9 @@
         },
         body: JSON.stringify(body)
       });
+      if (res.status === 409 && retry) {
+        return ghPutFile(repo, branch, path, base64Content, message, token, false);
+      }
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || ('上传失败 ' + res.status));
