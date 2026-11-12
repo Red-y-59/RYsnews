@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RY's 表纸</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #f6f7f9;
+      color: #111827;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-2">
+      <button id="nav-logo" type="button" class="flex items-center gap-2 text-left shrink-0">
+        <span class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm">涼</span>
+        <div class="leading-tight">
+          <div class="font-semibold text-sm sm:text-base text-slate-900">RY's 表纸</div>
+          <div class="text-[11px] text-slate-500 hidden sm:block">便利店打印整理</div>
+        </div>
+      </button>
+
+      <!-- Desktop Nav Tabs -->
+      <nav class="hidden md:flex items-center gap-1" id="desktop-nav">
+        <button type="button" data-view="home" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">首页</button>
+        <button type="button" data-view="browse" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">分类浏览</button>
+        <button type="button" data-view="search" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">搜索筛选</button>
+        <button type="button" data-view="print" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5">
+          <span>待打印清单</span>
+          <span id="badge-print-desktop" class="px-1.5 py-0.5 text-xs rounded-full bg-rose-600 text-white font-semibold">0</span>
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="btn-open-upload" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium transition flex items-center gap-1">
+          <span>+ 录入版面</span>
+        </button>
+        <button id="btn-open-backup" type="button" class="px-2.5 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-slate-700 text-xs sm:text-sm font-medium transition">
+          数据备份
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="md:hidden border-t border-gray-100 bg-white px-2 py-1.5 flex items-center justify-around text-xs">
+      <button type="button" data-view="home" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">首页</button>
+      <button type="button" data-view="browse" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">分类</button>
+      <button type="button" data-view="search" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">搜索</button>
+      <button type="button" data-view="print" class="nav-btn px-2.5 py-1.5 rounded-md font-medium flex items-center gap-1">
+        <span>待打印</span>
+        <span id="badge-print-mobile" class="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-semibold">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-5">
+
+    <!-- VIEW: HOME -->
+    <section id="view-home" class="space-y-6">
+      <!-- Quick Search Bar -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+        <form id="home-search-form" class="flex flex-col sm:flex-row gap-2.5">
+          <div class="relative flex-1">
+            <input id="home-search-input" type="text" placeholder="搜索活动类别、具体活动、出版社或商品番号..." class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-400" />
+            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+          </div>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium transition shrink-0">
+            全局搜索
+          </button>
+        </form>
+        <div class="mt-3 flex justify-end text-xs">
+          <button type="button" id="btn-home-print-shortcut" class="text-rose-600 hover:text-rose-700 font-medium flex items-center gap-1">
+            <span>前往待打印清单</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Publishers Entry -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900">出版社分类入口</h2>
+          <button type="button" id="btn-home-manage-cats" class="text-xs sm:text-sm text-slate-600 hover:text-slate-900 font-medium">管理分类 →</button>
+        </div>
+        <div id="home-publishers-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+      </div>
+
+      <!-- Recently Added -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900">最近新增的版面</h2>
+          <span id="home-total-count" class="text-xs text-slate-500"></span>
+        </div>
+        <div id="home-recent-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+      </div>
+    </section>
+
+    <!-- VIEW: BROWSE (4-level Category + 5th-level Editions) -->
+    <section id="view-browse" class="hidden space-y-4">
+      <!-- Breadcrumb Bar -->
+      <div class="bg-white rounded-xl border border-gray-200 px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2">
+        <div id="browse-breadcrumbs" class="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm"></div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-browse-back" class="px-2.5 py-1 rounded-lg border border-gray-200 hover:bg-gray-50 text-xs font-medium text-slate-700 hidden">
+            ← 返回上一级
+          </button>
+          <button type="button" id="btn-browse-add-child" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium">
+            + 新增
+          </button>
+        </div>
+      </div>
+
+      <!-- Level Title & Sub-items or Photo Wall -->
+      <div id="browse-header" class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 id="browse-title" class="text-lg font-semibold text-slate-900"></h2>
+          <p id="browse-subtitle" class="text-xs text-slate-500 mt-0.5"></p>
+        </div>
+      </div>
+
+      <div id="browse-content"></div>
+    </section>
+
+    <!-- VIEW: SEARCH & FILTER -->
+    <section id="view-search" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 space-y-3 shadow-sm">
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <input id="search-keyword" type="text" placeholder="输入活动类别、活动、出版社、版面名称或商品番号..." class="flex-1 px-3.5 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15" />
+          <button type="button" id="btn-reset-filters" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-sm text-slate-700 font-medium shrink-0">
+            重置筛选
+          </button>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          <select id="filter-publisher" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
+            <option value="">全部出版社</option>
+          </select>
+          <select id="filter-kind" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
+            <option value="">团体 / 个人</option>
+            <option value="团体">团体</option>
+            <option value="个人">个人</option>
+          </select>
+          <select id="filter-category" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
+            <option value="">全部活动类别</option>
+          </select>
+          <select id="filter-event" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
+            <option value="">全部活动</option>
+          </select>
+          <select id="filter-status" class="col-span-2 sm:col-span-1 px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
+            <option value="">全部状态</option>
+            <option value="valid">未失效</option>
+            <option value="expired">已失效</option>
+            <option value="unknown">未设截止时间</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600">
+        <span id="search-result-count"></span>
+      </div>
+
+      <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    </section>
+
+    <!-- VIEW: PRINT LIST -->
+    <section id="view-print" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900">便利店待打印清单</h2>
+          <p class="text-xs text-slate-500 mt-0.5">统一打印入口：eプリントサービス</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="print-stats" class="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-medium"></span>
+          <button type="button" id="btn-clear-printed" class="px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-xs font-medium text-slate-700">
+            清理已打印项
+          </button>
+          <button type="button" id="btn-export-print-csv" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium">
+            导出打印清单
+          </button>
+        </div>
+      </div>
+
+      <div id="print-list-container" class="space-y-3"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Image Detail / Lightbox -->
+  <div id="modal-detail" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+      <!-- Image Preview Area -->
+      <div class="relative bg-slate-950 flex-1 min-h-[42vh] md:min-h-[75vh] flex items-center justify-center p-3 select-none">
+        <img id="detail-img" src="" alt="版面大图" class="max-h-[50vh] md:max-h-[85vh] max-w-full w-auto h-auto object-contain rounded" />
+        <div id="detail-img-empty" class="hidden flex flex-col items-center justify-center text-slate-400 text-sm gap-2">
+          <svg class="w-10 h-10 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>暂无版面图片</span>
+        </div>
+        <button id="detail-prev" type="button" class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-900 flex items-center justify-center shadow font-bold" title="上一张">‹</button>
+        <button id="detail-next" type="button" class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-900 flex items-center justify-center shadow font-bold" title="下一张">›</button>
+        <span id="detail-counter" class="absolute bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-xs"></span>
+        <button id="detail-close-mobile" type="button" class="md:hidden absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center text-sm">✕</button>
+      </div>
+
+      <!-- Info Sidebar -->
+      <div class="w-full md:w-96 bg-white flex flex-col max-h-[48vh] md:max-h-[94vh] border-t md:border-t-0 md:border-l border-gray-200">
+        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">便利店打印</span>
+          <button id="detail-close" type="button" class="hidden md:flex w-7 h-7 rounded-lg hover:bg-gray-100 items-center justify-center text-slate-500">✕</button>
+        </div>
+
+        <div class="p-4 overflow-y-auto space-y-3 text-sm flex-1">
+          <h3 id="detail-title" class="font-semibold text-base text-slate-900"></h3>
+
+          <!-- Product Code Copy Box -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="text-[11px] text-slate-500">商品番号</div>
+              <div id="detail-code" class="font-mono font-semibold text-slate-900 truncate"></div>
+            </div>
+            <button id="detail-copy-code" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium shrink-0 transition">
+              复制番号
+            </button>
+          </div>
+
+          <dl class="grid grid-cols-3 gap-y-2 text-xs sm:text-sm">
+            <dt class="text-slate-500">出版社</dt><dd id="detail-publisher" class="col-span-2 font-medium text-slate-900"></dd>
+            <dt class="text-slate-500">分类</dt><dd id="detail-kind" class="col-span-2 text-slate-900"></dd>
+            <dt id="detail-category-label" class="text-slate-500">活动类别</dt><dd id="detail-category" class="col-span-2 font-medium text-slate-900"></dd>
+            <dt class="text-slate-500">活动</dt><dd id="detail-event" class="col-span-2 text-slate-900"></dd>
+            <dt class="text-slate-500">截止时间</dt><dd id="detail-deadline" class="col-span-2 text-slate-900"></dd>
+            <dt class="text-slate-500">原始链接</dt><dd id="detail-source" class="col-span-2 truncate"></dd>
+            <dt class="text-slate-500">备注</dt><dd id="detail-notes" class="col-span-2 text-slate-700 whitespace-pre-wrap"></dd>
+          </dl>
+        </div>
+
+        <div class="p-3.5 border-t border-gray-100 space-y-2 bg-gray-50/70">
+          <button id="detail-toggle-print" type="button" class="w-full py-2 rounded-xl text-sm font-medium transition"></button>
+          <p id="detail-print-hint" class="text-[11px] text-amber-700 text-center hidden"></p>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button id="detail-edit" type="button" class="py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-xs font-medium text-slate-700">编辑 / 换图</button>
+            <button id="detail-delete" type="button" class="py-1.5 rounded-lg border border-rose-200 bg-white hover:bg-rose-50 text-xs font-medium text-rose-600">删除记录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Upload / Edit Edition -->
+  <div id="modal-form" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl max-w-xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-xl">
+      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+        <h3 id="form-modal-title" class="font-semibold text-base text-slate-900">录入新闻版面</h3>
+        <button id="form-close" type="button" class="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-slate-500">✕</button>
+      </div>
+
+      <form id="edition-form" class="p-5 overflow-y-auto space-y-4 text-sm flex-1">
+        <input type="hidden" id="form-id" />
+
+        <!-- Image Upload / Preview -->
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1.5">版面图片 *</label>
+          <div class="flex items-start gap-3">
+            <div class="w-24 h-32 rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+              <img id="form-img-preview" src="" alt="预览" class="w-full h-full object-contain hidden" />
+              <span id="form-img-placeholder" class="text-[11px] text-gray-400 text-center px-1">暂无图片</span>
+            </div>
+            <div class="flex-1 space-y-2">
+              <input id="form-file" type="file" accept="image/*" class="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
+              <p class="text-[11px] text-slate-500">支持本地上传新闻截图或照片（自动压缩后保存在浏览器本地数据库）。编辑时若不重新选图，将保留原图。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">出版社 *</label>
+            <select id="form-publisher" required class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">团体 / 个人 *</label>
+            <select id="form-kind" required class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white">
+              <option value="个人">个人</option>
+              <option value="团体">团体</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div id="form-category-wrapper">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-medium text-slate-700">活动类别 *</label>
+              <button type="button" id="btn-toggle-new-category" class="text-[11px] text-blue-600 hover:underline">+ 新建</button>
+            </div>
+            <select id="form-category-select" class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white"></select>
+            <input id="form-category-new" type="text" placeholder="输入新的活动类别（如：演唱会、电影）" class="hidden w-full px-3 py-2 rounded-xl border border-blue-300 mt-1.5" />
+          </div>
+          <div id="form-event-wrapper">
+            <div class="flex items-center justify-between mb-1">
+              <label id="form-event-label" class="text-xs font-medium text-slate-700">具体活动名称 *</label>
+              <button type="button" id="btn-toggle-new-event" class="text-[11px] text-blue-600 hover:underline">+ 新建</button>
+            </div>
+            <select id="form-event-select" class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white"></select>
+            <input id="form-event-new" type="text" placeholder="输入新的活动名称" class="hidden w-full px-3 py-2 rounded-xl border border-blue-300 mt-1.5" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">版面名称 / 编号 *</label>
+            <input id="form-title" type="text" required placeholder="例如：亚洲巡演报道①" class="w-full px-3 py-2 rounded-xl border border-gray-200" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700 mb-1">截止时间</label>
+            <input id="form-deadline" type="date" class="w-full px-3 py-2 rounded-xl border border-gray-200" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">商品番号</label>
+          <input id="form-code" type="text" placeholder="例如：NKSP-261110-01" class="w-full px-3 py-2 rounded-xl border border-gray-200 font-mono" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">原始链接（X 或官方网站）</label>
+          <input id="form-source" type="url" placeholder="https://x.com/..." class="w-full px-3 py-2 rounded-xl border border-gray-200" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">备注</label>
+          <textarea id="form-notes" rows="2" placeholder="尺寸、打印截止日期或购买说明..." class="w-full px-3 py-2 rounded-xl border border-gray-200"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="form-cancel" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-sm font-medium">取消</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium">保存版面</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Category Input (Add / Rename) -->
+  <div id="modal-cat" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
+      <h3 id="cat-modal-title" class="font-semibold text-base text-slate-900"></h3>
+      <input id="cat-modal-input" type="text" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm" placeholder="请输入名称" />
+      <div class="flex justify-end gap-2">
+        <button type="button" id="cat-modal-cancel" class="px-3.5 py-1.5 rounded-xl border border-gray-200 text-sm">取消</button>
+        <button type="button" id="cat-modal-confirm" class="px-4 py-1.5 rounded-xl bg-slate-900 text-white text-sm font-medium">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Backup & Export -->
+  <div id="modal-backup" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold text-base text-slate-900">数据备份与管理</h3>
+        <button id="backup-close" type="button" class="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-slate-500">✕</button>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        当前数据与图片保存在浏览器本地 IndexedDB 数据库中（支持大容量图片存储），你可以随时导出 JSON 备份文件。
+      </p>
+      <div class="space-y-2">
+        <button id="btn-export-json" type="button" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium text-left flex items-center justify-between">
+          <span>导出全部数据备份（JSON）</span>
+          <span>↓</span>
+        </button>
+        <label class="w-full py-2.5 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 text-slate-700 text-sm font-medium flex items-center justify-between cursor-pointer">
+          <span>导入 JSON 文件（合并到当前数据）</span>
+          <span>+</span>
+          <input id="input-merge-json" type="file" accept=".json,application/json" multiple class="hidden" />
+        </label>
+        <label class="w-full py-2.5 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 text-slate-700 text-sm font-medium flex items-center justify-between cursor-pointer">
+          <span>导入 JSON 文件（覆盖当前数据）</span>
+          <span>↑</span>
+          <input id="input-import-json" type="file" accept=".json,application/json" class="hidden" />
+        </label>
+        <button id="btn-reset-demo" type="button" class="w-full py-2.5 px-4 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-600 text-sm font-medium text-left">
+          恢复默认示例数据
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: In-page Confirm -->
+  <div id="modal-confirm" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
+      <h3 id="confirm-title" class="font-semibold text-base text-slate-900">确认操作</h3>
+      <p id="confirm-message" class="text-sm text-slate-600"></p>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="confirm-cancel" class="px-3.5 py-1.5 rounded-xl border border-gray-200 text-sm">取消</button>
+        <button type="button" id="confirm-ok" class="px-4 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] hidden px-4 py-2 rounded-full bg-slate-900 text-white text-xs sm:text-sm shadow-lg"></div>
+
+  <script>
+    const STORAGE_KEY = 'jp_news_archive_v1';
+    const IDB_NAME = 'ry_cover_archive_db';
+    const IDB_STORE = 'app_data';
+    const IDB_VERSION = 1;
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error('IndexedDB not supported'));
+          return;
+        }
+        const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) {
+            db.createObjectStore(IDB_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error || new Error('Failed to open DB'));
+      });
+    }
+
+    async function idbGet(key) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const store = tx.objectStore(IDB_STORE);
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function idbSet(key, value) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        const store = tx.objectStore(IDB_STORE);
+        const req = store.put(value, key);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function compressImageFile(file, maxDim = 1600, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('读取图片失败'));
+        reader.onload = (ev) => {
+          const dataUrl = ev.target.result;
+          const img = new Image();
+          img.onerror = () => resolve(dataUrl);
+          img.onload = () => {
+            try {
+              let { width, height } = img;
+              if (width <= maxDim && height <= maxDim && file.size <= 300 * 1024) {
+                resolve(dataUrl);
+                return;
+              }
+              if (width > height && width > maxDim) {
+                height = Math.round(height * (maxDim / width));
+                width = maxDim;
+              } else if (height > maxDim) {
+                width = Math.round(width * (maxDim / height));
+                height = maxDim;
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              const compressed = canvas.toDataURL('image/jpeg', quality);
+              resolve(compressed.length < dataUrl.length ? compressed : dataUrl);
+            } catch (e) {
+              resolve(dataUrl);
+            }
+          };
+          img.src = dataUrl;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getTodayStr() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function getExpiryStatus(deadline) {
+      if (!deadline) return 'unknown';
+      return deadline < getTodayStr() ? 'expired' : 'valid';
+    }
+
+    function getExpiryLabel(deadline) {
+      if (!deadline) return '未设截止时间';
+      const today = getTodayStr();
+      if (deadline < today) return '已失效';
+      if (deadline === today) return '今日截止';
+      return '未失效';
+    }
+
+    function createDefaultData() {
+      return {
+        publishers: [
+          { id: 'pub_nikkan', name: '日刊スポーツ', source: '官方X账号' },
+          { id: 'pub_chunichi', name: '中スポ', source: '官方X账号' },
+          { id: 'pub_hochi', name: 'スポーツ報知', source: '官方X账号' },
+          { id: 'pub_daily', name: 'デイリースポーツ', source: '官方X账号' }
+        ],
+        categories: [
+          { id: 'cat_concert', kind: '个人', name: '演唱会' },
+          { id: 'cat_movie', kind: '个人', name: '电影宣传' }
+        ],
+        events: [
+          { id: 'evt_asia_tour', kind: '个人', categoryId: 'cat_concert', name: '亚洲巡演' },
+          { id: 'evt_silent_love', kind: '个人', categoryId: 'cat_movie', name: '电影《Silent Love》' },
+          { id: 'evt_group_movie', kind: '团体', categoryId: '', name: '电影宣传' }
+        ],
+        editions: [
+          {
+            id: 'ed_1',
+            publisherId: 'pub_nikkan',
+            kind: '个人',
+            categoryId: 'cat_concert',
+            eventId: 'evt_asia_tour',
+            title: '亚洲巡演报道①（主舞台特写）',
+            deadline: '2026-11-30',
+            productCode: 'NKSP-261108-01',
+            productType: '便利店打印',
+            sourceUrl: 'https://x.com/nikkansports',
+            notes: 'A3光面纸打印效果最佳，eプリントサービス可查',
+            imageUrl: '',
+            inPrintList: true,
+            printed: false,
+            createdAt: 1731024000000
+          },
+          {
+            id: 'ed_2',
+            publisherId: 'pub_nikkan',
+            kind: '个人',
+            categoryId: 'cat_concert',
+            eventId: 'evt_asia_tour',
+            title: '亚洲巡演报道②（白色礼服安可）',
+            deadline: '2026-11-25',
+            productCode: 'NKSP-261109-02',
+            productType: '便利店打印',
+            sourceUrl: 'https://x.com/nikkansports',
+            notes: '全国罗森/全家マルチコピー機对应',
+            imageUrl: '',
+            inPrintList: false,
+            printed: false,
+            createdAt: 1731110400000
+          },
+          {
+            id: 'ed_3',
+            publisherId: 'pub_nikkan',
+            kind: '个人',
+            categoryId: 'cat_concert',
+            eventId: 'evt_asia_tour',
+            title: '亚洲巡演报道③（巨蛋全景特别版）',
+            deadline: '2026-11-05',
+            productCode: '',
+            productType: '待确认',
+            sourceUrl: 'https://x.com/nikkansports',
+            notes: '示例：截止时间早于当前日期时自动判定为已失效',
+            imageUrl: '',
+            inPrintList: false,
+            printed: false,
+            createdAt: 1731196800000
+          },
+          {
+            id: 'ed_4',
+            publisherId: 'pub_nikkan',
+            kind: '团体',
+            categoryId: '',
+            eventId: 'evt_group_movie',
+            title: '电影首映见面会报道①',
+            deadline: '',
+            productCode: '',
+            productType: '实体报纸',
+            sourceUrl: 'https://www.nikkansports.com/',
+            notes: '仅普通实体报纸发行，未设置打印截止时间',
+            imageUrl: '',
+            inPrintList: false,
+            printed: false,
+            createdAt: 1730764800000
+          },
+          {
+            id: 'ed_5',
+            publisherId: 'pub_hochi',
+            kind: '个人',
+            categoryId: 'cat_concert',
+            eventId: 'evt_asia_tour',
+            title: '报知体育·亚洲巡演专访版面',
+            deadline: '2026-11-20',
+            productCode: 'HOCH-261109-08',
+            productType: '便利店打印',
+            sourceUrl: 'https://x.com/SportsHochi',
+            notes: '同场活动不同出版社独立存档',
+            imageUrl: '',
+            inPrintList: true,
+            printed: true,
+            createdAt: 1731120000000
+          }
+        ]
+      };
+    }
+
+    function normalizeData(raw) {
+      const publishers = Array.isArray(raw.publishers) ? raw.publishers : [];
+      const rawCats = Array.isArray(raw.categories)
+        ? raw.categories
+        : (Array.isArray(raw.subjects) ? raw.subjects.filter(s => s.kind === '个人') : []);
+
+      const catIdMap = {};
+      const catByName = {};
+      const categories = [];
+      rawCats.forEach(c => {
+        const name = (c.name || '').trim();
+        if (!name) return;
+        if (!catByName[name]) {
+          const canonical = { id: c.id, kind: '个人', name };
+          catByName[name] = canonical;
+          categories.push(canonical);
+        }
+        catIdMap[c.id] = catByName[name].id;
+      });
+
+      const evtIdMap = {};
+      const evtByKey = {};
+      const events = [];
+      (Array.isArray(raw.events) ? raw.events : []).forEach(ev => {
+        const kind = ev.kind || '个人';
+        const rawCatId = kind === '团体' ? '' : (ev.categoryId ?? ev.subjectId ?? '');
+        const canonicalCatId = kind === '团体' ? '' : (catIdMap[rawCatId] || rawCatId);
+        const name = (ev.name || '').trim();
+        if (!name) return;
+        const key = `${kind}::${canonicalCatId}::${name}`;
+        if (!evtByKey[key]) {
+          const canonical = { id: ev.id, kind, categoryId: canonicalCatId, name };
+          evtByKey[key] = canonical;
+          events.push(canonical);
+        }
+        evtIdMap[ev.id] = evtByKey[key].id;
+      });
+
+      const editions = (Array.isArray(raw.editions) ? raw.editions : []).map(ed => {
+        const kind = ed.kind || '个人';
+        const rawCatId = kind === '团体' ? '' : (ed.categoryId ?? ed.subjectId ?? '');
+        const canonicalCatId = kind === '团体' ? '' : (catIdMap[rawCatId] || rawCatId);
+        const canonicalEvtId = evtIdMap[ed.eventId] || ed.eventId;
+        return {
+          ...ed,
+          categoryId: canonicalCatId,
+          eventId: canonicalEvtId,
+          deadline: ed.deadline ?? ed.publishDate ?? ''
+        };
+      });
+
+      return { publishers, categories, events, editions };
+    }
+
+    let state = {
+      data: createDefaultData(),
+      view: 'home',
+      browse: { publisherId: null, kind: null, categoryId: null, eventId: null },
+      detailList: [],
+      detailIndex: 0,
+      uploadPreviewDataUrl: '',
+      catAction: null,
+      confirmAction: null
+    };
+
+    async function loadData() {
+      try {
+        const stored = await idbGet(STORAGE_KEY);
+        if (stored && Array.isArray(stored.publishers) && Array.isArray(stored.editions)) {
+          return normalizeData(stored);
+        }
+      } catch (e) {}
+
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.publishers) && Array.isArray(parsed.editions)) {
+            const migrated = normalizeData(parsed);
+            try { await idbSet(STORAGE_KEY, migrated); } catch (e) {}
+            return migrated;
+          }
+        }
+      } catch (e) {}
+
+      const def = createDefaultData();
+      try { await idbSet(STORAGE_KEY, def); } catch (e) {}
+      return def;
+    }
+
+    function saveData() {
+      idbSet(STORAGE_KEY, state.data).catch(() => {
+        showToast('保存失败：浏览器本地存储空间不足或权限受限');
+      });
+    }
+
+    function uid(prefix) {
+      return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => el.classList.add('hidden'), 2600);
+    }
+
+    function copyText(text) {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('已复制商品番号：' + text);
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('已复制商品番号：' + text);
+      } catch (e) {
+        showToast('复制失败，请手动长按复制');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function getPublisher(id) { return state.data.publishers.find(p => p.id === id); }
+    function getCategory(id) { return state.data.categories.find(c => c.id === id); }
+    function getEvent(id) { return state.data.events.find(e => e.id === id); }
+
+    function updatePrintBadges() {
+      const pending = state.data.editions.filter(e => e.inPrintList && !e.printed).length;
+      document.getElementById('badge-print-desktop').textContent = pending;
+      document.getElementById('badge-print-mobile').textContent = pending;
+    }
+
+    function switchView(viewName) {
+      state.view = viewName;
+      ['home', 'browse', 'search', 'print'].forEach(v => {
+        document.getElementById('view-' + v).classList.toggle('hidden', v !== viewName);
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const active = btn.dataset.view === viewName;
+        btn.className = btn.className.replace(/bg-slate-900 text-white|text-slate-600 hover:bg-gray-100/g, '').trim();
+        if (active) {
+          btn.classList.add('bg-slate-900', 'text-white');
+        } else {
+          btn.classList.add('text-slate-600', 'hover:bg-gray-100');
+        }
+      });
+      renderCurrentView();
+    }
+
+    function renderCurrentView() {
+      updatePrintBadges();
+      if (state.view === 'home') renderHome();
+      if (state.view === 'browse') renderBrowse();
+      if (state.view === 'search') renderSearch();
+      if (state.view === 'print') renderPrintList();
+    }
+
+    function createEditionCard(ed, listForLightbox) {
+      const pub = getPublisher(ed.publisherId);
+      const cat = getCategory(ed.categoryId);
+      const evt = getEvent(ed.eventId);
+      const expiryStatus = getExpiryStatus(ed.deadline);
+
+      const card = document.createElement('div');
+      card.className = 'group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col cursor-pointer';
+
+      let statusBadge = '';
+      if (expiryStatus === 'expired') {
+        statusBadge = '<span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-800/80 text-white">已失效</span>';
+      }
+
+      card.innerHTML = `
+        <div class="relative bg-slate-100 aspect-[3/4] overflow-hidden flex items-center justify-center">
+          ${ed.imageUrl
+            ? `<img src="${ed.imageUrl}" alt="${ed.title}" class="w-full h-full object-contain group-hover:scale-[1.02] transition duration-200" />`
+            : `<div class="flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5"><svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>暂无图片</span></div>`
+          }
+          ${statusBadge}
+          ${ed.inPrintList ? `<span class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-600 text-white">${ed.printed ? '已打印' : '待打印'}</span>` : ''}
+        </div>
+        <div class="p-3 space-y-1 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-900 line-clamp-1">${ed.title}</div>
+            <div class="text-[11px] text-slate-500 mt-0.5 line-clamp-1">${[pub ? pub.name : '', cat ? cat.name : '', evt ? evt.name : ''].filter(Boolean).join(' · ')}</div>
+            ${ed.deadline ? `<div class="text-[10px] mt-0.5 ${expiryStatus === 'expired' ? 'text-slate-400 line-through' : 'text-emerald-700'}">截止：${ed.deadline}</div>` : ''}
+          </div>
+          <div class="pt-1.5 flex items-center justify-between gap-1 border-t border-gray-100 mt-1.5">
+            <span class="text-[11px] font-mono ${ed.productCode ? 'text-slate-700 font-medium' : 'text-slate-400'} truncate">${ed.productCode || '无番号'}</span>
+            ${ed.productCode ? `<button type="button" class="copy-mini px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] text-slate-700 font-medium shrink-0">复制</button>` : ''}
+          </div>
+        </div>
+      `;
+
+      const copyBtn = card.querySelector('.copy-mini');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          copyText(ed.productCode);
+        });
+      }
+
+      card.addEventListener('click', () => {
+        const idx = listForLightbox.findIndex(item => item.id === ed.id);
+        openDetailModal(listForLightbox, Math.max(0, idx));
+      });
+
+      return card;
+    }
+
+    function renderHome() {
+      const pubGrid = document.getElementById('home-publishers-grid');
+      pubGrid.innerHTML = '';
+      state.data.publishers.forEach(pub => {
+        const count = state.data.editions.filter(e => e.publisherId === pub.id).length;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bg-white rounded-2xl border border-gray-200 p-3.5 text-left hover:border-slate-400 hover:shadow-xs transition';
+        btn.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="font-semibold text-sm sm:text-base text-slate-900 truncate">${pub.name}</div>
+            <span class="text-xs text-slate-400 shrink-0">${count} 版面</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1 truncate">${pub.source || '官方X账号'}</div>
+        `;
+        btn.addEventListener('click', () => {
+          state.browse = { publisherId: pub.id, kind: null, categoryId: null, eventId: null };
+          switchView('browse');
+        });
+        pubGrid.appendChild(btn);
+      });
+
+      const sorted = [...state.data.editions].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      document.getElementById('home-total-count').textContent = `共收录 ${sorted.length} 张版面`;
+      const recentGrid = document.getElementById('home-recent-grid');
+      recentGrid.innerHTML = '';
+      if (sorted.length === 0) {
+        recentGrid.innerHTML = '<div class="col-span-full text-center py-10 text-sm text-slate-500">暂无版面记录，点击右上角「+ 录入版面」开始添加。</div>';
+        return;
+      }
+      sorted.slice(0, 8).forEach(ed => recentGrid.appendChild(createEditionCard(ed, sorted)));
+    }
+
+    function renderBrowse() {
+      const { publisherId, kind, categoryId, eventId } = state.browse;
+      const bc = document.getElementById('browse-breadcrumbs');
+      const backBtn = document.getElementById('btn-browse-back');
+      const addBtn = document.getElementById('btn-browse-add-child');
+      const titleEl = document.getElementById('browse-title');
+      const subEl = document.getElementById('browse-subtitle');
+      const content = document.getElementById('browse-content');
+      content.innerHTML = '';
+
+      const crumbs = [{ label: '全部出版社', action: () => { state.browse = { publisherId: null, kind: null, categoryId: null, eventId: null }; renderBrowse(); } }];
+      const pub = publisherId ? getPublisher(publisherId) : null;
+      const cat = categoryId ? getCategory(categoryId) : null;
+      const evt = eventId ? getEvent(eventId) : null;
+
+      if (pub) crumbs.push({ label: pub.name, action: () => { state.browse = { publisherId, kind: null, categoryId: null, eventId: null }; renderBrowse(); } });
+      if (kind) crumbs.push({ label: kind, action: () => { state.browse = { publisherId, kind, categoryId: null, eventId: null }; renderBrowse(); } });
+      if (cat) crumbs.push({ label: cat.name, action: () => { state.browse = { publisherId, kind, categoryId, eventId: null }; renderBrowse(); } });
+      if (evt) crumbs.push({ label: evt.name, action: null });
+
+      bc.innerHTML = '';
+      crumbs.forEach((c, idx) => {
+        if (idx > 0) {
+          const sep = document.createElement('span');
+          sep.className = 'text-slate-300';
+          sep.textContent = '/';
+          bc.appendChild(sep);
+        }
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = c.label;
+        if (idx === crumbs.length - 1) {
+          btn.className = 'font-semibold text-slate-900';
+        } else {
+          btn.className = 'text-slate-500 hover:text-slate-900 hover:underline';
+          btn.addEventListener('click', c.action);
+        }
+        bc.appendChild(btn);
+      });
+
+      backBtn.classList.toggle('hidden', crumbs.length <= 1);
+
+      // Publishers
+      if (!publisherId) {
+        titleEl.textContent = '选择出版社';
+        subEl.textContent = '支持新增、修改或删除出版社';
+        addBtn.textContent = '+ 新增出版社';
+        addBtn.classList.remove('hidden');
+        addBtn.onclick = () => openCatModal('新增出版社', '', (val) => {
+          state.data.publishers.push({ id: uid('pub'), name: val, source: '官方X账号' });
+          saveData();
+          renderBrowse();
+        });
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3';
+        state.data.publishers.forEach(p => {
+          const cnt = state.data.editions.filter(e => e.publisherId === p.id).length;
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl border border-gray-200 p-4 flex flex-col justify-between gap-3 hover:border-slate-400 transition cursor-pointer';
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <div class="text-base font-semibold text-slate-900">${p.name}</div>
+                <span class="text-xs text-slate-500 shrink-0">${cnt} 张版面</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 text-xs">
+              <button type="button" class="cat-edit text-slate-500 hover:text-slate-900">重命名</button>
+              <button type="button" class="cat-del text-rose-500 hover:text-rose-700">删除</button>
+            </div>
+          `;
+          card.addEventListener('click', () => { state.browse = { publisherId: p.id, kind: null, categoryId: null, eventId: null }; renderBrowse(); });
+          card.querySelector('.cat-edit').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openCatModal('重命名出版社', p.name, (val) => { p.name = val; saveData(); renderBrowse(); });
+          });
+          card.querySelector('.cat-del').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openConfirmModal(`删除出版社「${p.name}」`, '删除后将同时移除该出版社下的分类和版面记录，确定继续吗？', () => {
+              state.data.publishers = state.data.publishers.filter(x => x.id !== p.id);
+              state.data.editions = state.data.editions.filter(x => x.publisherId !== p.id);
+              saveData();
+              renderBrowse();
+            });
+          });
+          grid.appendChild(card);
+        });
+        content.appendChild(grid);
+        return;
+      }
+
+      // Group vs Solo
+      if (!kind) {
+        titleEl.textContent = `${pub.name} · 团体 / 个人`;
+        subEl.textContent = '同一场活动若同时有团体和个人版面，可分别归档';
+        addBtn.classList.add('hidden');
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
+        ['团体', '个人'].forEach(k => {
+          const edCount = state.data.editions.filter(e => e.publisherId === publisherId && e.kind === k).length;
+          const subCount = k === '团体'
+            ? state.data.events.filter(ev => ev.kind === '团体').length
+            : state.data.categories.filter(c => c.kind === '个人').length;
+          const countLabel = k === '团体' ? `${subCount} 个活动` : `${subCount} 个活动类别`;
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'bg-white rounded-2xl border border-gray-200 p-6 text-left hover:border-slate-900 hover:shadow-xs transition';
+          card.innerHTML = `
+            <div class="text-xs text-slate-500">${pub.name}</div>
+            <div class="text-xl font-semibold text-slate-900 mt-1">${k}</div>
+            <div class="text-xs text-slate-500 mt-2">${countLabel} · ${edCount} 张版面</div>
+          `;
+          card.addEventListener('click', () => { state.browse.kind = k; renderBrowse(); });
+          grid.appendChild(card);
+        });
+        content.appendChild(grid);
+        return;
+      }
+
+      // Solo: Event Categories (个人 -> 活动类别 -> 具体活动名称)
+      if (kind === '个人' && !categoryId) {
+        titleEl.textContent = `${pub.name} · 个人 · 选择活动类别`;
+        subEl.textContent = '点击进入查看该类别下的具体活动';
+        addBtn.textContent = '+ 新增活动类别';
+        addBtn.classList.remove('hidden');
+        addBtn.onclick = () => openCatModal('新增活动类别', '', (val) => {
+          if (!state.data.categories.some(c => c.kind === '个人' && c.name === val)) {
+            state.data.categories.push({ id: uid('cat'), kind: '个人', name: val });
+            saveData();
+          } else {
+            showToast('该活动类别已存在');
+          }
+          renderBrowse();
+        });
+
+        const list = state.data.categories.filter(c => c.kind === '个人');
+        if (list.length === 0) {
+          content.innerHTML = '<div class="bg-white rounded-2xl border border-gray-200 p-8 text-center text-sm text-slate-500">暂无活动类别，请点击右上角「+ 新增活动类别」。</div>';
+          return;
+        }
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+        list.forEach(c => {
+          const evtCnt = state.data.events.filter(ev => ev.categoryId === c.id).length;
+          const edCnt = state.data.editions.filter(ed => ed.publisherId === publisherId && ed.categoryId === c.id).length;
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl border border-gray-200 p-4 flex flex-col justify-between gap-3 hover:border-slate-400 transition cursor-pointer';
+          card.innerHTML = `
+            <div>
+              <div class="text-base font-semibold text-slate-900">${c.name}</div>
+              <div class="text-xs text-slate-500 mt-1">${evtCnt} 个具体活动 · ${edCnt} 张版面</div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 text-xs">
+              <button type="button" class="cat-edit text-slate-500 hover:text-slate-900">重命名</button>
+              <button type="button" class="cat-del text-rose-500 hover:text-rose-700">删除</button>
+            </div>
+          `;
+          card.addEventListener('click', () => { state.browse.categoryId = c.id; renderBrowse(); });
+          card.querySelector('.cat-edit').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openCatModal('重命名活动类别', c.name, (val) => { c.name = val; saveData(); renderBrowse(); });
+          });
+          card.querySelector('.cat-del').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openConfirmModal(`删除活动类别「${c.name}」`, '将同时移除其下属具体活动和版面记录，确定继续吗？', () => {
+              state.data.categories = state.data.categories.filter(x => x.id !== c.id);
+              state.data.events = state.data.events.filter(x => x.categoryId !== c.id);
+              state.data.editions = state.data.editions.filter(x => x.categoryId !== c.id);
+              saveData();
+              renderBrowse();
+            });
+          });
+          grid.appendChild(card);
+        });
+        content.appendChild(grid);
+        return;
+      }
+
+      // Events (团体: 活动 / 个人: 具体活动名称)
+      if (!eventId) {
+        titleEl.textContent = kind === '团体' ? `${pub.name} · 团体 · 选择活动` : `${cat.name} · 选择具体活动`;
+        subEl.textContent = kind === '团体' ? `${pub.name} / 团体` : `${pub.name} / 个人 / ${cat.name}`;
+        addBtn.textContent = kind === '团体' ? '+ 新增活动' : '+ 新增具体活动';
+        addBtn.classList.remove('hidden');
+        addBtn.onclick = () => openCatModal(kind === '团体' ? '新增活动' : '新增具体活动', '', (val) => {
+          const targetCatId = kind === '团体' ? '' : categoryId;
+          if (!state.data.events.some(ev => ev.kind === kind && ev.categoryId === targetCatId && ev.name === val)) {
+            state.data.events.push({ id: uid('evt'), kind, categoryId: targetCatId, name: val });
+            saveData();
+          } else {
+            showToast('该活动已存在');
+          }
+          renderBrowse();
+        });
+
+        const list = kind === '团体'
+          ? state.data.events.filter(ev => ev.kind === '团体')
+          : state.data.events.filter(ev => ev.categoryId === categoryId);
+
+        if (list.length === 0) {
+          content.innerHTML = '<div class="bg-white rounded-2xl border border-gray-200 p-8 text-center text-sm text-slate-500">暂无活动记录，请点击右上角新增。</div>';
+          return;
+        }
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+        list.forEach(ev => {
+          const eds = state.data.editions.filter(ed => ed.publisherId === publisherId && ed.eventId === ev.id);
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl border border-gray-200 p-4 flex flex-col justify-between gap-3 hover:border-slate-400 transition cursor-pointer';
+          card.innerHTML = `
+            <div>
+              <div class="text-base font-semibold text-slate-900">${ev.name}</div>
+              <div class="text-xs text-slate-500 mt-1">已收录 ${eds.length} 张新闻版面</div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 text-xs">
+              <button type="button" class="cat-edit text-slate-500 hover:text-slate-900">重命名</button>
+              <button type="button" class="cat-del text-rose-500 hover:text-rose-700">删除</button>
+            </div>
+          `;
+          card.addEventListener('click', () => { state.browse.eventId = ev.id; renderBrowse(); });
+          card.querySelector('.cat-edit').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openCatModal('重命名活动', ev.name, (val) => { ev.name = val; saveData(); renderBrowse(); });
+          });
+          card.querySelector('.cat-del').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openConfirmModal(`删除活动「${ev.name}」`, '将同时移除该活动下的所有版面记录，确定继续吗？', () => {
+              state.data.events = state.data.events.filter(x => x.id !== ev.id);
+              state.data.editions = state.data.editions.filter(x => x.eventId !== ev.id);
+              saveData();
+              renderBrowse();
+            });
+          });
+          grid.appendChild(card);
+        });
+        content.appendChild(grid);
+        return;
+      }
+
+      // Editions Photo Wall
+      titleEl.textContent = `${evt.name} · 版面图片墙`;
+      subEl.textContent = [pub.name, kind, cat ? cat.name : '', evt.name].filter(Boolean).join(' / ');
+      addBtn.textContent = '+ 上传版面';
+      addBtn.classList.remove('hidden');
+      addBtn.onclick = () => openUploadModal({ publisherId, kind, categoryId, eventId });
+
+      const eds = state.data.editions.filter(ed => ed.publisherId === publisherId && ed.eventId === eventId);
+      if (eds.length === 0) {
+        content.innerHTML = '<div class="bg-white rounded-2xl border border-gray-200 p-8 text-center text-sm text-slate-500">该活动下暂无版面图片，点击右上角「+ 上传版面」添加。</div>';
+        return;
+      }
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4';
+      eds.forEach(ed => grid.appendChild(createEditionCard(ed, eds)));
+      content.appendChild(grid);
+    }
+
+    function populateSearchFilters() {
+      const pubSel = document.getElementById('filter-publisher');
+      const curPub = pubSel.value;
+      pubSel.innerHTML = '<option value="">全部出版社</option>';
+      state.data.publishers.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.name;
+        pubSel.appendChild(opt);
+      });
+      pubSel.value = state.data.publishers.some(p => p.id === curPub) ? curPub : '';
+
+      const kind = document.getElementById('filter-kind').value;
+
+      const catSel = document.getElementById('filter-category');
+      const curCat = catSel.value;
+      catSel.innerHTML = '<option value="">全部活动类别</option>';
+      if (kind === '团体') {
+        catSel.disabled = true;
+        catSel.classList.add('opacity-50');
+      } else {
+        catSel.disabled = false;
+        catSel.classList.remove('opacity-50');
+        const uniqueCats = [...new Set(state.data.categories.filter(c => c.kind === '个人').map(c => c.name))];
+        uniqueCats.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          catSel.appendChild(opt);
+        });
+        catSel.value = uniqueCats.includes(curCat) ? curCat : '';
+      }
+
+      const catName = catSel.value;
+
+      const evtSel = document.getElementById('filter-event');
+      const curEvt = evtSel.value;
+      evtSel.innerHTML = '<option value="">全部活动</option>';
+      const matchedEvents = state.data.events.filter(e => {
+        if (kind && e.kind !== kind) return false;
+        if (catName) {
+          const c = getCategory(e.categoryId);
+          if (!c || c.name !== catName) return false;
+        }
+        return true;
+      });
+      const uniqueEvents = [...new Set(matchedEvents.map(e => e.name))];
+      uniqueEvents.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        evtSel.appendChild(opt);
+      });
+      evtSel.value = uniqueEvents.includes(curEvt) ? curEvt : '';
+    }
+
+    function renderSearch() {
+      populateSearchFilters();
+      const kw = document.getElementById('search-keyword').value.trim().toLowerCase();
+      const pubId = document.getElementById('filter-publisher').value;
+      const kind = document.getElementById('filter-kind').value;
+      const catName = document.getElementById('filter-category').value;
+      const evtName = document.getElementById('filter-event').value;
+      const statusVal = document.getElementById('filter-status').value;
+
+      const filtered = state.data.editions.filter(ed => {
+        if (pubId && ed.publisherId !== pubId) return false;
+        if (kind && ed.kind !== kind) return false;
+        const cat = getCategory(ed.categoryId);
+        if (catName && (!cat || cat.name !== catName)) return false;
+        const evt = getEvent(ed.eventId);
+        if (evtName && (!evt || evt.name !== evtName)) return false;
+        if (statusVal && getExpiryStatus(ed.deadline) !== statusVal) return false;
+        if (kw) {
+          const pub = getPublisher(ed.publisherId);
+          const hay = [
+            ed.title,
+            ed.productCode,
+            ed.notes,
+            ed.deadline,
+            pub ? pub.name : '',
+            cat ? cat.name : '',
+            evt ? evt.name : '',
+            ed.kind
+          ].join(' ').toLowerCase();
+          if (!hay.includes(kw)) return false;
+        }
+        return true;
+      });
+
+      const validCnt = filtered.filter(e => getExpiryStatus(e.deadline) === 'valid').length;
+      const expCnt = filtered.filter(e => getExpiryStatus(e.deadline) === 'expired').length;
+      document.getElementById('search-result-count').textContent = `共找到 ${filtered.length} 张符合条件的版面（未失效 ${validCnt} · 已失效 ${expCnt}）`;
+
+      const grid = document.getElementById('search-results-grid');
+      grid.innerHTML = '';
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full bg-white rounded-2xl border border-gray-200 p-10 text-center text-sm text-slate-500">没有匹配的版面，请尝试更换关键词或筛选条件。</div>';
+        return;
+      }
+      filtered.forEach(ed => grid.appendChild(createEditionCard(ed, filtered)));
+    }
+
+    function renderPrintList() {
+      const items = state.data.editions.filter(e => e.inPrintList);
+      const pendingCount = items.filter(i => !i.printed).length;
+      const doneCount = items.filter(i => i.printed).length;
+      document.getElementById('print-stats').textContent = `待打印 ${pendingCount} 张 · 已打印 ${doneCount} 张`;
+
+      const container = document.getElementById('print-list-container');
+      container.innerHTML = '';
+      if (items.length === 0) {
+        container.innerHTML = '<div class="bg-white rounded-2xl border border-gray-200 p-10 text-center text-sm text-slate-500">待打印清单为空。可在任意版面的详情页点击加入。</div>';
+        return;
+      }
+
+      items.forEach(item => {
+        const pub = getPublisher(item.publisherId);
+        const cat = getCategory(item.categoryId);
+        const evt = getEvent(item.eventId);
+
+        const row = document.createElement('div');
+        row.className = `bg-white rounded-2xl border p-3.5 flex flex-col sm:flex-row sm:items-center gap-3.5 ${item.printed ? 'border-gray-200 opacity-70' : 'border-gray-200 shadow-xs'}`;
+        row.innerHTML = `
+          <div class="w-20 h-24 rounded-xl bg-slate-100 overflow-hidden shrink-0 cursor-pointer flex items-center justify-center print-thumb">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" class="w-full h-full object-contain" />` : '<span class="text-[10px] text-slate-400">暂无图片</span>'}
+          </div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-semibold text-sm sm:text-base text-slate-900 ${item.printed ? 'line-through' : ''}">${item.title}</span>
+              ${item.printed ? '<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-medium">已打印</span>' : '<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[11px] font-medium">待打印</span>'}
+            </div>
+            <div class="text-xs text-slate-500">${[pub ? pub.name : '', cat ? cat.name : '', evt ? evt.name : ''].filter(Boolean).join(' · ')}</div>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-100 text-slate-900 font-semibold">${item.productCode || '未填写番号'}</span>
+              ${item.productCode ? '<button type="button" class="print-copy px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium">一键复制番号</button>' : ''}
+            </div>
+          </div>
+          <div class="flex sm:flex-col items-center sm:items-end justify-end gap-2 shrink-0">
+            <button type="button" class="print-toggle px-3 py-1.5 rounded-lg border text-xs font-medium ${item.printed ? 'border-gray-200 text-slate-600 hover:bg-gray-50' : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}">
+              ${item.printed ? '标为未打印' : '标记已打印'}
+            </button>
+            <button type="button" class="print-remove px-3 py-1.5 rounded-lg text-xs text-rose-600 hover:bg-rose-50">
+              移出清单
+            </button>
+          </div>
+        `;
+
+        row.querySelector('.print-thumb').addEventListener('click', () => {
+          const idx = items.findIndex(x => x.id === item.id);
+          openDetailModal(items, Math.max(0, idx));
+        });
+        const copyBtn = row.querySelector('.print-copy');
+        if (copyBtn) copyBtn.addEventListener('click', () => copyText(item.productCode));
+        row.querySelector('.print-toggle').addEventListener('click', () => {
+          item.printed = !item.printed;
+          saveData();
+          renderCurrentView();
+        });
+        row.querySelector('.print-remove').addEventListener('click', () => {
+          item.inPrintList = false;
+          saveData();
+          renderCurrentView();
+          showToast('已从待打印清单移除');
+        });
+        container.appendChild(row);
+      });
+    }
+
+    function openDetailModal(list, index) {
+      state.detailList = list;
+      state.detailIndex = index;
+      renderDetailModal();
+      document.getElementById('modal-detail').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('modal-detail').classList.add('hidden');
+    }
+
+    function renderDetailModal() {
+      const ed = state.detailList[state.detailIndex];
+      if (!ed) return closeDetailModal();
+      const pub = getPublisher(ed.publisherId);
+      const cat = getCategory(ed.categoryId);
+      const evt = getEvent(ed.eventId);
+
+      const detailImgEl = document.getElementById('detail-img');
+      const detailImgEmptyEl = document.getElementById('detail-img-empty');
+      if (ed.imageUrl) {
+        detailImgEl.src = ed.imageUrl;
+        detailImgEl.classList.remove('hidden');
+        detailImgEmptyEl.classList.add('hidden');
+      } else {
+        detailImgEl.src = '';
+        detailImgEl.classList.add('hidden');
+        detailImgEmptyEl.classList.remove('hidden');
+      }
+      document.getElementById('detail-counter').textContent = `${state.detailIndex + 1} / ${state.detailList.length}`;
+      document.getElementById('detail-prev').classList.toggle('hidden', state.detailList.length <= 1);
+      document.getElementById('detail-next').classList.toggle('hidden', state.detailList.length <= 1);
+
+      document.getElementById('detail-title').textContent = ed.title;
+      document.getElementById('detail-code').textContent = ed.productCode || '暂无商品番号';
+      document.getElementById('detail-copy-code').disabled = !ed.productCode;
+      document.getElementById('detail-copy-code').classList.toggle('opacity-40', !ed.productCode);
+
+      document.getElementById('detail-publisher').textContent = pub ? pub.name : '-';
+      document.getElementById('detail-kind').textContent = ed.kind;
+
+      const showCat = ed.kind === '个人' || Boolean(cat);
+      document.getElementById('detail-category-label').classList.toggle('hidden', !showCat);
+      document.getElementById('detail-category').classList.toggle('hidden', !showCat);
+      document.getElementById('detail-category').textContent = cat ? cat.name : '-';
+
+      document.getElementById('detail-event').textContent = evt ? evt.name : '-';
+
+      const deadlineEl = document.getElementById('detail-deadline');
+      if (ed.deadline) {
+        const expStatus = getExpiryStatus(ed.deadline);
+        const expLabel = getExpiryLabel(ed.deadline);
+        const badgeCls = expStatus === 'expired'
+          ? 'bg-slate-100 text-slate-600'
+          : 'bg-emerald-50 text-emerald-700';
+        deadlineEl.innerHTML = `<span>${ed.deadline}</span> <span class="ml-1.5 px-1.5 py-0.5 rounded text-[11px] font-medium ${badgeCls}">${expLabel}</span>`;
+      } else {
+        deadlineEl.textContent = '未填写';
+      }
+
+      const srcEl = document.getElementById('detail-source');
+      if (ed.sourceUrl) {
+        srcEl.innerHTML = `<a href="${ed.sourceUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">${ed.sourceUrl}</a>`;
+      } else {
+        srcEl.textContent = '未填写';
+      }
+      document.getElementById('detail-notes').textContent = ed.notes || '无备注';
+
+      const toggleBtn = document.getElementById('detail-toggle-print');
+      const hintEl = document.getElementById('detail-print-hint');
+      toggleBtn.disabled = false;
+      hintEl.classList.add('hidden');
+      if (ed.inPrintList) {
+        toggleBtn.textContent = '已加入待打印清单（点击移出）';
+        toggleBtn.className = 'w-full py-2 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition';
+      } else {
+        toggleBtn.textContent = '+ 加入待打印清单';
+        toggleBtn.className = 'w-full py-2 rounded-xl text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white transition';
+      }
+    }
+
+    function openUploadModal(preset = {}, editId = null) {
+      const form = document.getElementById('edition-form');
+      form.reset();
+      state.uploadPreviewDataUrl = '';
+      document.getElementById('form-id').value = editId || '';
+      document.getElementById('form-modal-title').textContent = editId ? '编辑新闻版面' : '录入新闻版面';
+      document.getElementById('form-category-new').classList.add('hidden');
+      document.getElementById('form-event-new').classList.add('hidden');
+
+      const pubSel = document.getElementById('form-publisher');
+      pubSel.innerHTML = '';
+      state.data.publishers.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.name;
+        pubSel.appendChild(opt);
+      });
+
+      const ed = editId ? state.data.editions.find(x => x.id === editId) : null;
+      pubSel.value = ed ? ed.publisherId : (preset.publisherId || state.data.publishers[0]?.id || '');
+      document.getElementById('form-kind').value = ed ? ed.kind : (preset.kind || '个人');
+
+      const initCatId = ed ? ed.categoryId : preset.categoryId;
+      const initEvtId = ed ? ed.eventId : preset.eventId;
+      const initCatName = initCatId ? (getCategory(initCatId)?.name || '') : '';
+      const initEvtName = initEvtId ? (getEvent(initEvtId)?.name || '') : '';
+      refreshFormCategories(initCatName);
+      refreshFormEvents(initEvtName);
+
+      if (ed) {
+        document.getElementById('form-title').value = ed.title;
+        document.getElementById('form-deadline').value = ed.deadline || '';
+        document.getElementById('form-code').value = ed.productCode || '';
+        document.getElementById('form-source').value = ed.sourceUrl || '';
+        document.getElementById('form-notes').value = ed.notes || '';
+        state.uploadPreviewDataUrl = ed.imageUrl || '';
+        if (ed.imageUrl) {
+          document.getElementById('form-img-preview').src = ed.imageUrl;
+          document.getElementById('form-img-preview').classList.remove('hidden');
+          document.getElementById('form-img-placeholder').classList.add('hidden');
+        } else {
+          document.getElementById('form-img-preview').classList.add('hidden');
+          document.getElementById('form-img-placeholder').classList.remove('hidden');
+        }
+      } else {
+        document.getElementById('form-img-preview').classList.add('hidden');
+        document.getElementById('form-img-placeholder').classList.remove('hidden');
+      }
+
+      document.getElementById('modal-form').classList.remove('hidden');
+    }
+
+    function refreshFormCategories(selectedName = null) {
+      const kind = document.getElementById('form-kind').value;
+      const wrapper = document.getElementById('form-category-wrapper');
+      const evtLabel = document.getElementById('form-event-label');
+      const sel = document.getElementById('form-category-select');
+      const prevVal = selectedName !== null ? selectedName : sel.value;
+      if (kind === '团体') {
+        wrapper.classList.add('hidden');
+        evtLabel.textContent = '活动名称 *';
+        sel.innerHTML = '';
+        return;
+      }
+      wrapper.classList.remove('hidden');
+      evtLabel.textContent = '具体活动名称 *';
+      const uniqueNames = [...new Set(state.data.categories.filter(c => c.kind === '个人').map(c => c.name))];
+      sel.innerHTML = '';
+      if (uniqueNames.length === 0) {
+        sel.innerHTML = '<option value="">（暂无，请点击右上角新建）</option>';
+      } else {
+        uniqueNames.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          sel.appendChild(opt);
+        });
+        if (prevVal && uniqueNames.includes(prevVal)) sel.value = prevVal;
+      }
+    }
+
+    function refreshFormEvents(selectedName = null) {
+      const kind = document.getElementById('form-kind').value;
+      const catName = document.getElementById('form-category-select').value;
+      const sel = document.getElementById('form-event-select');
+      const prevVal = selectedName !== null ? selectedName : sel.value;
+      const matched = kind === '团体'
+        ? state.data.events.filter(e => e.kind === '团体')
+        : state.data.events.filter(e => {
+            if (e.kind !== '个人') return false;
+            if (!catName) return true;
+            const c = getCategory(e.categoryId);
+            return c && c.name === catName;
+          });
+      const uniqueNames = [...new Set(matched.map(e => e.name))];
+      sel.innerHTML = '';
+      if (uniqueNames.length === 0) {
+        sel.innerHTML = '<option value="">（暂无，请点击右上角新建）</option>';
+      } else {
+        uniqueNames.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          sel.appendChild(opt);
+        });
+        if (prevVal && uniqueNames.includes(prevVal)) sel.value = prevVal;
+      }
+    }
+
+    function mergeImportedData(raw) {
+      const incoming = normalizeData(raw);
+      const pubIdMap = {};
+      incoming.publishers.forEach(p => {
+        const existing = state.data.publishers.find(x => x.id === p.id || x.name === p.name);
+        if (existing) {
+          pubIdMap[p.id] = existing.id;
+        } else {
+          state.data.publishers.push(p);
+          pubIdMap[p.id] = p.id;
+        }
+      });
+
+      const catIdMap = {};
+      incoming.categories.forEach(c => {
+        const existing = state.data.categories.find(x => x.kind === '个人' && x.name === c.name);
+        if (existing) {
+          catIdMap[c.id] = existing.id;
+        } else {
+          state.data.categories.push(c);
+          catIdMap[c.id] = c.id;
+        }
+      });
+
+      const evtIdMap = {};
+      incoming.events.forEach(ev => {
+        const mappedCatId = ev.kind === '团体' ? '' : (catIdMap[ev.categoryId] || ev.categoryId);
+        const existing = state.data.events.find(x => x.kind === ev.kind && x.categoryId === mappedCatId && x.name === ev.name);
+        if (existing) {
+          evtIdMap[ev.id] = existing.id;
+        } else {
+          const newEv = { ...ev, categoryId: mappedCatId };
+          state.data.events.push(newEv);
+          evtIdMap[ev.id] = newEv.id;
+        }
+      });
+
+      let addedCount = 0;
+      const existingIds = new Set(state.data.editions.map(e => e.id));
+      incoming.editions.forEach(ed => {
+        if (existingIds.has(ed.id)) return;
+        const mappedPubId = pubIdMap[ed.publisherId] || ed.publisherId;
+        const mappedCatId = ed.kind === '团体' ? '' : (catIdMap[ed.categoryId] || ed.categoryId);
+        const mappedEvtId = evtIdMap[ed.eventId] || ed.eventId;
+        state.data.editions.push({
+          ...ed,
+          publisherId: mappedPubId,
+          categoryId: mappedCatId,
+          eventId: mappedEvtId
+        });
+        addedCount++;
+      });
+      return addedCount;
+    }
+
+    function openCatModal(title, initialVal, onConfirm) {
+      document.getElementById('cat-modal-title').textContent = title;
+      const inp = document.getElementById('cat-modal-input');
+      inp.value = initialVal || '';
+      state.catAction = onConfirm;
+      document.getElementById('modal-cat').classList.remove('hidden');
+      setTimeout(() => inp.focus(), 30);
+    }
+
+    function openConfirmModal(title, msg, onOk) {
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-message').textContent = msg;
+      state.confirmAction = onOk;
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    }
+
+    function bindEvents() {
+      document.getElementById('nav-logo').addEventListener('click', () => switchView('home'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.dataset.view));
+      });
+
+      document.getElementById('home-search-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('search-keyword').value = document.getElementById('home-search-input').value;
+        switchView('search');
+      });
+      document.getElementById('btn-home-print-shortcut').addEventListener('click', () => switchView('print'));
+      document.getElementById('btn-home-manage-cats').addEventListener('click', () => {
+        state.browse = { publisherId: null, kind: null, categoryId: null, eventId: null };
+        switchView('browse');
+      });
+
+      document.getElementById('btn-browse-back').addEventListener('click', () => {
+        const b = state.browse;
+        if (b.eventId) b.eventId = null;
+        else if (b.categoryId) b.categoryId = null;
+        else if (b.kind) b.kind = null;
+        else if (b.publisherId) b.publisherId = null;
+        renderBrowse();
+      });
+
+      ['search-keyword', 'filter-publisher', 'filter-kind', 'filter-category', 'filter-event', 'filter-status'].forEach(id => {
+        document.getElementById(id).addEventListener('input', renderSearch);
+        document.getElementById(id).addEventListener('change', renderSearch);
+      });
+      document.getElementById('btn-reset-filters').addEventListener('click', () => {
+        ['search-keyword', 'filter-publisher', 'filter-kind', 'filter-category', 'filter-event', 'filter-status'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        renderSearch();
+      });
+
+      // Print list actions
+      document.getElementById('btn-clear-printed').addEventListener('click', () => {
+        let count = 0;
+        state.data.editions.forEach(e => {
+          if (e.inPrintList && e.printed) { e.inPrintList = false; count++; }
+        });
+        saveData();
+        renderCurrentView();
+        showToast(count ? `已清理 ${count} 条已打印记录` : '没有已打印的记录');
+      });
+      document.getElementById('btn-export-print-csv').addEventListener('click', () => {
+        const items = state.data.editions.filter(e => e.inPrintList);
+        const lines = ['出版社,分类,活动类别,活动,版面名称,截止时间,商品番号,打印状态'];
+        items.forEach(i => {
+          const pub = getPublisher(i.publisherId)?.name || '';
+          const cat = getCategory(i.categoryId)?.name || '';
+          const evt = getEvent(i.eventId)?.name || '';
+          lines.push(`"${pub}","${i.kind}","${cat}","${evt}","${i.title}","${i.deadline || ''}","${i.productCode || ''}","${i.printed ? '已打印' : '待打印'}"`);
+        });
+        const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '便利店待打印清单.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // Detail modal
+      document.getElementById('detail-close').addEventListener('click', closeDetailModal);
+      document.getElementById('detail-close-mobile').addEventListener('click', closeDetailModal);
+      document.getElementById('detail-prev').addEventListener('click', () => {
+        state.detailIndex = (state.detailIndex - 1 + state.detailList.length) % state.detailList.length;
+        renderDetailModal();
+      });
+      document.getElementById('detail-next').addEventListener('click', () => {
+        state.detailIndex = (state.detailIndex + 1) % state.detailList.length;
+        renderDetailModal();
+      });
+      document.getElementById('detail-copy-code').addEventListener('click', () => {
+        const ed = state.detailList[state.detailIndex];
+        if (ed && ed.productCode) copyText(ed.productCode);
+      });
+      document.getElementById('detail-toggle-print').addEventListener('click', () => {
+        const ed = state.detailList[state.detailIndex];
+        if (!ed) return;
+        ed.inPrintList = !ed.inPrintList;
+        saveData();
+        renderDetailModal();
+        renderCurrentView();
+        showToast(ed.inPrintList ? '已加入待打印清单' : '已移出待打印清单');
+      });
+      document.getElementById('detail-edit').addEventListener('click', () => {
+        const ed = state.detailList[state.detailIndex];
+        if (!ed) return;
+        closeDetailModal();
+        openUploadModal({}, ed.id);
+      });
+      document.getElementById('detail-delete').addEventListener('click', () => {
+        const ed = state.detailList[state.detailIndex];
+        if (!ed) return;
+        openConfirmModal('删除版面记录', `确定要删除「${ed.title}」吗？`, () => {
+          state.data.editions = state.data.editions.filter(x => x.id !== ed.id);
+          saveData();
+          closeDetailModal();
+          renderCurrentView();
+          showToast('已删除该版面');
+        });
+      });
+
+      // Keyboard navigation in lightbox
+      document.addEventListener('keydown', (e) => {
+        if (document.getElementById('modal-detail').classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeDetailModal();
+        if (e.key === 'ArrowLeft' && state.detailList.length > 1) {
+          state.detailIndex = (state.detailIndex - 1 + state.detailList.length) % state.detailList.length;
+          renderDetailModal();
+        }
+        if (e.key === 'ArrowRight' && state.detailList.length > 1) {
+          state.detailIndex = (state.detailIndex + 1) % state.detailList.length;
+          renderDetailModal();
+        }
+      });
+
+      // Upload form modal
+      document.getElementById('btn-open-upload').addEventListener('click', () => openUploadModal());
+      document.getElementById('form-close').addEventListener('click', () => document.getElementById('modal-form').classList.add('hidden'));
+      document.getElementById('form-cancel').addEventListener('click', () => document.getElementById('modal-form').classList.add('hidden'));
+      document.getElementById('form-publisher').addEventListener('change', () => { refreshFormCategories(); refreshFormEvents(); });
+      document.getElementById('form-kind').addEventListener('change', () => { refreshFormCategories(); refreshFormEvents(); });
+      document.getElementById('form-category-select').addEventListener('change', () => refreshFormEvents());
+
+      document.getElementById('btn-toggle-new-category').addEventListener('click', () => {
+        document.getElementById('form-category-new').classList.toggle('hidden');
+      });
+      document.getElementById('btn-toggle-new-event').addEventListener('click', () => {
+        document.getElementById('form-event-new').classList.toggle('hidden');
+      });
+
+      document.getElementById('form-file').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          const compressedUrl = await compressImageFile(file);
+          state.uploadPreviewDataUrl = compressedUrl;
+          document.getElementById('form-img-preview').src = compressedUrl;
+          document.getElementById('form-img-preview').classList.remove('hidden');
+          document.getElementById('form-img-placeholder').classList.add('hidden');
+        } catch (err) {
+          showToast('图片处理失败，请重试');
+        }
+      });
+
+      document.getElementById('edition-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('form-id').value;
+        const publisherId = document.getElementById('form-publisher').value;
+        const kind = document.getElementById('form-kind').value;
+
+        let categoryId = '';
+        if (kind === '个人') {
+          const newCatName = document.getElementById('form-category-new').value.trim();
+          const chosenCatName = (!document.getElementById('form-category-new').classList.contains('hidden') && newCatName)
+            ? newCatName
+            : document.getElementById('form-category-select').value;
+          if (!chosenCatName) { showToast('请选择或新建活动类别'); return; }
+          const existingCat = state.data.categories.find(c => c.kind === '个人' && c.name === chosenCatName);
+          if (existingCat) {
+            categoryId = existingCat.id;
+          } else {
+            categoryId = uid('cat');
+            state.data.categories.push({ id: categoryId, kind: '个人', name: chosenCatName });
+          }
+        }
+
+        const newEvtName = document.getElementById('form-event-new').value.trim();
+        const chosenEvtName = (!document.getElementById('form-event-new').classList.contains('hidden') && newEvtName)
+          ? newEvtName
+          : document.getElementById('form-event-select').value;
+        if (!chosenEvtName) { showToast('请选择或新建活动名称'); return; }
+
+        let eventId = '';
+        const existingEvt = kind === '团体'
+          ? state.data.events.find(ev => ev.kind === '团体' && ev.name === chosenEvtName)
+          : state.data.events.find(ev => ev.kind === '个人' && ev.categoryId === categoryId && ev.name === chosenEvtName);
+        if (existingEvt) {
+          eventId = existingEvt.id;
+        } else {
+          eventId = uid('evt');
+          state.data.events.push({ id: eventId, kind, categoryId, name: chosenEvtName });
+        }
+
+        const imgUrl = state.uploadPreviewDataUrl || '';
+
+        const payload = {
+          publisherId,
+          kind,
+          categoryId,
+          eventId,
+          title: document.getElementById('form-title').value.trim(),
+          deadline: document.getElementById('form-deadline').value,
+          productType: '便利店打印',
+          productCode: document.getElementById('form-code').value.trim(),
+          sourceUrl: document.getElementById('form-source').value.trim(),
+          notes: document.getElementById('form-notes').value.trim(),
+          imageUrl: imgUrl
+        };
+
+        if (editId) {
+          const idx = state.data.editions.findIndex(x => x.id === editId);
+          if (idx !== -1) {
+            const prev = state.data.editions[idx];
+            state.data.editions[idx] = {
+              ...prev,
+              ...payload,
+              inPrintList: prev.inPrintList
+            };
+          }
+          showToast('已更新版面记录');
+        } else {
+          state.data.editions.unshift({
+            id: uid('ed'),
+            ...payload,
+            inPrintList: false,
+            printed: false,
+            createdAt: Date.now()
+          });
+          showToast('已保存新版面');
+        }
+        saveData();
+        document.getElementById('modal-form').classList.add('hidden');
+        renderCurrentView();
+      });
+
+      // Category modal
+      document.getElementById('cat-modal-cancel').addEventListener('click', () => document.getElementById('modal-cat').classList.add('hidden'));
+      document.getElementById('cat-modal-confirm').addEventListener('click', () => {
+        const val = document.getElementById('cat-modal-input').value.trim();
+        if (!val) { showToast('名称不能为空'); return; }
+        document.getElementById('modal-cat').classList.add('hidden');
+        if (state.catAction) state.catAction(val);
+      });
+
+      // Confirm modal
+      document.getElementById('confirm-cancel').addEventListener('click', () => document.getElementById('modal-confirm').classList.add('hidden'));
+      document.getElementById('confirm-ok').addEventListener('click', () => {
+        document.getElementById('modal-confirm').classList.add('hidden');
+        if (state.confirmAction) state.confirmAction();
+      });
+
+      // Backup modal
+      document.getElementById('btn-open-backup').addEventListener('click', () => document.getElementById('modal-backup').classList.remove('hidden'));
+      document.getElementById('backup-close').addEventListener('click', () => document.getElementById('modal-backup').classList.add('hidden'));
+      document.getElementById('btn-export-json').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(state.data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `RY表紙备份_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('已导出 JSON 备份');
+      });
+      document.getElementById('input-merge-json').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+        let totalAdded = 0;
+        let validFiles = 0;
+        for (const file of files) {
+          try {
+            const text = await file.text();
+            const parsed = JSON.parse(text);
+            if (parsed && Array.isArray(parsed.publishers) && Array.isArray(parsed.editions)) {
+              totalAdded += mergeImportedData(parsed);
+              validFiles++;
+            }
+          } catch (err) {}
+        }
+        e.target.value = '';
+        if (validFiles === 0) {
+          showToast('JSON 文件格式不正确或解析失败');
+          return;
+        }
+        saveData();
+        document.getElementById('modal-backup').classList.add('hidden');
+        renderCurrentView();
+        showToast(`已导入 ${validFiles} 个 JSON 文件，新增 ${totalAdded} 张版面`);
+      });
+      document.getElementById('input-import-json').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(ev.target.result);
+            if (parsed && Array.isArray(parsed.publishers) && Array.isArray(parsed.editions)) {
+              state.data = normalizeData(parsed);
+              saveData();
+              document.getElementById('modal-backup').classList.add('hidden');
+              renderCurrentView();
+              showToast('备份数据恢复成功');
+            } else {
+              showToast('备份文件格式不正确');
+            }
+          } catch (err) {
+            showToast('解析备份文件失败');
+          }
+        };
+        reader.readAsText(file);
+      });
+      document.getElementById('btn-reset-demo').addEventListener('click', () => {
+        openConfirmModal('恢复示例数据', '这将覆盖当前的本地修改，恢复为初始示例数据，确定继续吗？', () => {
+          state.data = createDefaultData();
+          saveData();
+          document.getElementById('modal-backup').classList.add('hidden');
+          state.browse = { publisherId: null, kind: null, categoryId: null, eventId: null };
+          switchView('home');
+          showToast('已恢复默认示例数据');
+        });
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      bindEvents();
+      state.data = await loadData();
+      switchView('home');
+    });
+  </script>
+</body>
+</html>
