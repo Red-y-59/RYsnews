@@ -46,8 +46,9 @@
         <button id="btn-open-upload" type="button" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium transition flex items-center gap-1">
           <span>+ 录入版面</span>
         </button>
-        <button id="btn-open-backup" type="button" class="px-2.5 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-slate-700 text-xs sm:text-sm font-medium transition">
-          数据备份
+        <button id="btn-open-backup" type="button" class="px-2.5 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-slate-700 text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+          <span id="sync-dot" class="w-2 h-2 rounded-full bg-slate-300"></span>
+          <span>同步与备份</span>
         </button>
       </div>
     </div>
@@ -363,14 +364,37 @@
 
   <!-- MODAL: Backup & Export -->
   <div id="modal-backup" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
-    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-xl">
+    <div class="bg-white rounded-2xl max-w-md w-full max-h-[92vh] overflow-y-auto p-5 space-y-4 shadow-xl">
       <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-base text-slate-900">数据备份与管理</h3>
+        <h3 class="font-semibold text-base text-slate-900">云端同步与数据备份</h3>
         <button id="backup-close" type="button" class="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-slate-500">✕</button>
       </div>
-      <p class="text-xs text-slate-600 leading-relaxed">
-        当前数据与图片保存在浏览器本地 IndexedDB 数据库中（支持大容量图片存储），你可以随时导出 JSON 备份文件。
-      </p>
+
+      <!-- GitHub Sync Box -->
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-900">GitHub 仓库自动同步</span>
+          <span id="gh-sync-status" class="text-[11px] text-slate-500">未配置</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <input id="gh-repo" type="text" placeholder="用户名/仓库名" class="col-span-2 px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white text-xs" />
+          <input id="gh-branch" type="text" placeholder="分支 (main)" value="main" class="px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white text-xs" />
+        </div>
+        <input id="gh-token" type="password" placeholder="粘贴 GitHub Token（仅保存在当前设备本地）" class="w-full px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white text-xs" />
+        <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
+          <input id="gh-auto-sync" type="checkbox" checked class="rounded border-gray-300" />
+          <span>每次新增或修改后自动同步到 GitHub</span>
+        </label>
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
+          <button id="btn-gh-pull" type="button" class="py-1.5 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 text-xs font-medium text-slate-700">
+            从云端拉取
+          </button>
+          <button id="btn-gh-push" type="button" class="py-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium">
+            保存并上传云端
+          </button>
+        </div>
+      </div>
+
       <div class="space-y-2">
         <button id="btn-export-json" type="button" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium text-left flex items-center justify-between">
           <span>导出全部数据备份（JSON）</span>
@@ -413,6 +437,176 @@
     const IDB_NAME = 'ry_cover_archive_db';
     const IDB_STORE = 'app_data';
     const IDB_VERSION = 1;
+
+    const GH_CFG_KEY = 'ry_gh_sync_cfg_v1';
+    let ghSyncTimer = null;
+    let ghIsSyncing = false;
+
+    function detectGitHubRepoFromUrl() {
+      const host = window.location.hostname || '';
+      if (!host.endsWith('.github.io')) return '';
+      const owner = host.replace('.github.io', '');
+      const parts = (window.location.pathname || '/').split('/').filter(Boolean);
+      const repo = parts[0] || `${owner}.github.io`;
+      return `${owner}/${repo}`;
+    }
+
+    function loadGhConfig() {
+      try {
+        const raw = localStorage.getItem(GH_CFG_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return { repo: detectGitHubRepoFromUrl(), branch: 'main', token: '', autoSync: true };
+    }
+
+    function saveGhConfig(cfg) {
+      try {
+        localStorage.setItem(GH_CFG_KEY, JSON.stringify(cfg));
+      } catch (e) {}
+    }
+
+    function setSyncIndicator(status, text) {
+      const dot = document.getElementById('sync-dot');
+      const label = document.getElementById('gh-sync-status');
+      if (dot) {
+        dot.className = 'w-2 h-2 rounded-full ' + (
+          status === 'ok' ? 'bg-emerald-500' :
+          status === 'syncing' ? 'bg-amber-400 animate-pulse' :
+          status === 'err' ? 'bg-rose-500' : 'bg-slate-300'
+        );
+      }
+      if (label && text) label.textContent = text;
+    }
+
+    function utf8ToBase64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    async function ghGetFileSha(repo, branch, path, token) {
+      const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json'
+        }
+      });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error('GitHub API ' + res.status);
+      const data = await res.json();
+      return data.sha || null;
+    }
+
+    async function ghPutFile(repo, branch, path, base64Content, message, token) {
+      const sha = await ghGetFileSha(repo, branch, path, token);
+      const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+      const body = { message, content: base64Content, branch };
+      if (sha) body.sha = sha;
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || ('上传失败 ' + res.status));
+      }
+      return res.json();
+    }
+
+    async function pullFromGitHub(silent = false) {
+      const cfg = loadGhConfig();
+      const repo = (cfg.repo || detectGitHubRepoFromUrl() || '').trim();
+      const branch = (cfg.branch || 'main').trim();
+      if (!repo) {
+        if (!silent) showToast('请先填写 GitHub 用户名/仓库名');
+        return false;
+      }
+      setSyncIndicator('syncing', '正在拉取...');
+      try {
+        let parsed = null;
+        if (cfg.token) {
+          const apiUrl = `https://api.github.com/repos/${repo}/contents/archive_data.json?ref=${encodeURIComponent(branch)}&_=${Date.now()}`;
+          const res = await fetch(apiUrl, {
+            headers: {
+              'Authorization': `Bearer ${cfg.token}`,
+              'Accept': 'application/vnd.github.raw'
+            }
+          });
+          if (res.ok) parsed = await res.json();
+        }
+        if (!parsed) {
+          const rawUrl = `https://raw.githubusercontent.com/${repo}/${encodeURIComponent(branch)}/archive_data.json?t=${Date.now()}`;
+          const res = await fetch(rawUrl);
+          if (res.ok) parsed = await res.json();
+        }
+        if (parsed && Array.isArray(parsed.publishers) && Array.isArray(parsed.editions)) {
+          state.data = normalizeData(parsed);
+          await idbSet(STORAGE_KEY, state.data);
+          renderCurrentView();
+          setSyncIndicator('ok', `已同步 (${repo})`);
+          if (!silent) showToast('已从 GitHub 拉取最新数据');
+          return true;
+        }
+        setSyncIndicator(cfg.token ? 'ok' : 'idle', cfg.token ? '云端暂无存档文件' : '未配置');
+        if (!silent) showToast('云端尚未找到 archive_data.json，可先点击上传');
+        return false;
+      } catch (e) {
+        setSyncIndicator('err', '拉取失败');
+        if (!silent) showToast('从 GitHub 拉取失败：' + e.message);
+        return false;
+      }
+    }
+
+    async function pushToGitHub(silent = false) {
+      if (ghIsSyncing) return;
+      const cfg = loadGhConfig();
+      const repo = (cfg.repo || '').trim();
+      const branch = (cfg.branch || 'main').trim();
+      const token = (cfg.token || '').trim();
+      if (!repo || !token) {
+        if (!silent) showToast('请填写仓库名和 GitHub Token');
+        return;
+      }
+      ghIsSyncing = true;
+      setSyncIndicator('syncing', '正在同步到 GitHub...');
+      try {
+        let imgUploaded = 0;
+        for (const ed of state.data.editions) {
+          if (ed.imageUrl && ed.imageUrl.startsWith('data:image/')) {
+            const commaIdx = ed.imageUrl.indexOf(',');
+            if (commaIdx !== -1) {
+              const b64 = ed.imageUrl.slice(commaIdx + 1);
+              const ext = ed.imageUrl.includes('image/png') ? 'png' : 'jpg';
+              const imgPath = `images/${ed.id}.${ext}`;
+              await ghPutFile(repo, branch, imgPath, b64, `Upload image ${ed.id}`, token);
+              ed.imageUrl = `https://raw.githubusercontent.com/${repo}/${encodeURIComponent(branch)}/${imgPath}`;
+              imgUploaded++;
+            }
+          }
+        }
+        const jsonStr = JSON.stringify(state.data, null, 2);
+        await ghPutFile(repo, branch, 'archive_data.json', utf8ToBase64(jsonStr), 'Update archive_data.json', token);
+        await idbSet(STORAGE_KEY, state.data);
+        setSyncIndicator('ok', `已同步 (${repo})`);
+        if (!silent) showToast(imgUploaded ? `云端同步成功（含 ${imgUploaded} 张图片）` : '云端同步成功');
+      } catch (e) {
+        setSyncIndicator('err', '同步失败');
+        if (!silent) showToast('同步失败：' + e.message);
+      } finally {
+        ghIsSyncing = false;
+      }
+    }
+
+    function scheduleAutoSync() {
+      const cfg = loadGhConfig();
+      if (!cfg.token || !cfg.repo || !cfg.autoSync) return;
+      clearTimeout(ghSyncTimer);
+      ghSyncTimer = setTimeout(() => { pushToGitHub(true); }, 1200);
+    }
 
     function openDB() {
       return new Promise((resolve, reject) => {
@@ -712,7 +906,9 @@
     }
 
     function saveData() {
-      idbSet(STORAGE_KEY, state.data).catch(() => {
+      idbSet(STORAGE_KEY, state.data).then(() => {
+        scheduleAutoSync();
+      }).catch(() => {
         showToast('保存失败：浏览器本地存储空间不足或权限受限');
       });
     }
@@ -1813,7 +2009,32 @@
       });
 
       // Backup modal
-      document.getElementById('btn-open-backup').addEventListener('click', () => document.getElementById('modal-backup').classList.remove('hidden'));
+      document.getElementById('btn-open-backup').addEventListener('click', () => {
+        const cfg = loadGhConfig();
+        document.getElementById('gh-repo').value = cfg.repo || detectGitHubRepoFromUrl() || '';
+        document.getElementById('gh-branch').value = cfg.branch || 'main';
+        document.getElementById('gh-token').value = cfg.token || '';
+        document.getElementById('gh-auto-sync').checked = cfg.autoSync !== false;
+        document.getElementById('modal-backup').classList.remove('hidden');
+      });
+      document.getElementById('btn-gh-pull').addEventListener('click', async () => {
+        saveGhConfig({
+          repo: document.getElementById('gh-repo').value.trim(),
+          branch: document.getElementById('gh-branch').value.trim() || 'main',
+          token: document.getElementById('gh-token').value.trim(),
+          autoSync: document.getElementById('gh-auto-sync').checked
+        });
+        await pullFromGitHub(false);
+      });
+      document.getElementById('btn-gh-push').addEventListener('click', async () => {
+        saveGhConfig({
+          repo: document.getElementById('gh-repo').value.trim(),
+          branch: document.getElementById('gh-branch').value.trim() || 'main',
+          token: document.getElementById('gh-token').value.trim(),
+          autoSync: document.getElementById('gh-auto-sync').checked
+        });
+        await pushToGitHub(false);
+      });
       document.getElementById('backup-close').addEventListener('click', () => document.getElementById('modal-backup').classList.add('hidden'));
       document.getElementById('btn-export-json').addEventListener('click', () => {
         const blob = new Blob([JSON.stringify(state.data, null, 2)], { type: 'application/json' });
@@ -1888,6 +2109,10 @@
       bindEvents();
       state.data = await loadData();
       switchView('home');
+      const cfg = loadGhConfig();
+      if (cfg.repo || detectGitHubRepoFromUrl()) {
+        pullFromGitHub(true);
+      }
     });
   </script>
 </body>
