@@ -2405,7 +2405,28 @@
       "id": "store_lawson",
       "name": "ローソン (Lawson)",
       "qrImages": [],
-      "codeImages": []
+      "codeImages": [
+        {
+          "id": "gimg_mwegg1tqetvt",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwegg1tqetvt.jpg"
+        },
+        {
+          "id": "gimg_mwegg1tupha0",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwegg1tupha0.jpg"
+        },
+        {
+          "id": "gimg_mwegg1udag7e",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwegg1udag7e.jpg"
+        },
+        {
+          "id": "gimg_mwegg1uvesyk",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwegg1uvesyk.jpg"
+        },
+        {
+          "id": "gimg_mwegg1vff11y",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwegg1vff11y.jpg"
+        }
+      ]
     },
     {
       "id": "store_famima",
