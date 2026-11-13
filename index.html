@@ -648,6 +648,19 @@
             }
           }
         }
+        for (const gimg of (state.data.generalGuideImages || [])) {
+          if (gimg.imageUrl && gimg.imageUrl.startsWith('data:image/')) {
+            const commaIdx = gimg.imageUrl.indexOf(',');
+            if (commaIdx !== -1) {
+              const b64 = gimg.imageUrl.slice(commaIdx + 1);
+              const ext = gimg.imageUrl.includes('image/png') ? 'png' : 'jpg';
+              const imgPath = `images/${gimg.id}.${ext}`;
+              await ghPutFile(repo, branch, imgPath, b64, `Upload guide ${gimg.id}`, token);
+              gimg.imageUrl = `https://raw.githubusercontent.com/${repo}/${encodeURIComponent(branch)}/${imgPath}`;
+              imgUploaded++;
+            }
+          }
+        }
         for (const store of (state.data.printGuides || [])) {
           const allStoreImgs = [...(store.qrImages || []), ...(store.codeImages || []), ...(store.images || [])];
           for (const gimg of allStoreImgs) {
@@ -789,6 +802,7 @@
           { id: 'pub_hochi', name: 'スポーツ報知', source: '官方X账号', officialAccount: '@SportsHochi', printNotes: '' },
           { id: 'pub_daily', name: 'デイリースポーツ', source: '官方X账号', officialAccount: '@Daily_Online', printNotes: '' }
         ],
+        generalGuideImages: [],
         printGuides: [
           { id: 'store_711', name: 'セブン-イレブン (7-Eleven)', qrImages: [], codeImages: [] },
           { id: 'store_lawson', name: 'ローソン (Lawson)', qrImages: [], codeImages: [] },
@@ -964,7 +978,8 @@
             codeImages: Array.isArray(g.codeImages) ? g.codeImages : (Array.isArray(g.images) ? g.images : [])
           }))
         : defaultStores;
-      return { publishers: normPubs, categories, events, editions, printGuides };
+      const generalGuideImages = Array.isArray(raw.generalGuideImages) ? raw.generalGuideImages : [];
+      return { publishers: normPubs, categories, events, editions, printGuides, generalGuideImages };
     }
 
     let state = {
@@ -1942,11 +1957,11 @@
           const box = document.createElement('div');
           box.className = 'relative rounded-xl border border-gray-200 bg-white overflow-hidden cursor-pointer';
           box.innerHTML = `
-            <img src="${imgObj.imageUrl}" alt="${store.name} ${labelText}" class="w-full h-auto block" />
+            <img src="${imgObj.imageUrl}" alt="${store.name || ''} ${labelText}" class="w-full h-auto block" />
             <button type="button" class="img-del absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/65 hover:bg-rose-600 text-white text-[11px]">删除</button>
           `;
           box.querySelector('img').addEventListener('click', () => {
-            openGuidePreview(imgObj.imageUrl, `${store.name} · ${labelText} (${idx + 1}/${imgs.length})`);
+            openGuidePreview(imgObj.imageUrl, `${store.name ? store.name + ' · ' : ''}${labelText} (${idx + 1}/${imgs.length})`);
           });
           box.querySelector('.img-del').addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1969,14 +1984,22 @@
       detailEl.innerHTML = '';
 
       const stores = state.data.printGuides || [];
-      if (stores.length === 0) {
-        detailEl.innerHTML = '<div class="bg-white rounded-2xl border border-gray-200 p-8 text-center text-sm text-slate-500">暂无便利店分类，点击右上角「+ 新增便利店」添加。</div>';
-        return;
+      const validIds = ['__general__', ...stores.map(s => s.id)];
+      if (!state.activeGuideStoreId || !validIds.includes(state.activeGuideStoreId)) {
+        state.activeGuideStoreId = '__general__';
       }
 
-      if (!state.activeGuideStoreId || !stores.some(s => s.id === state.activeGuideStoreId)) {
-        state.activeGuideStoreId = stores[0].id;
-      }
+      const genBtn = document.createElement('button');
+      genBtn.type = 'button';
+      genBtn.className = state.activeGuideStoreId === '__general__'
+        ? 'px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs sm:text-sm font-medium transition'
+        : 'px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-slate-700 text-xs sm:text-sm font-medium transition';
+      genBtn.textContent = '通用指引';
+      genBtn.addEventListener('click', () => {
+        state.activeGuideStoreId = '__general__';
+        renderPrintGuide();
+      });
+      tabsEl.appendChild(genBtn);
 
       stores.forEach(s => {
         const active = s.id === state.activeGuideStoreId;
@@ -1993,7 +2016,18 @@
         tabsEl.appendChild(btn);
       });
 
-      const store = stores.find(s => s.id === state.activeGuideStoreId) || stores[0];
+      if (state.activeGuideStoreId === '__general__') {
+        if (!Array.isArray(state.data.generalGuideImages)) state.data.generalGuideImages = [];
+        const genCard = document.createElement('div');
+        genCard.className = 'bg-white rounded-2xl border border-gray-200 p-4 sm:p-5';
+        const section = renderGuideSection(state.data, 'generalGuideImages', '通用指引');
+        genCard.appendChild(section);
+        detailEl.appendChild(genCard);
+        return;
+      }
+
+      const store = stores.find(s => s.id === state.activeGuideStoreId);
+      if (!store) return;
       const card = document.createElement('div');
       card.className = 'bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 space-y-4';
 
