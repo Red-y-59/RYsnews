@@ -2488,7 +2488,20 @@
     {
       "id": "store_ministop",
       "name": "ミニストップ (Ministop)",
-      "qrImages": [],
+      "qrImages": [
+        {
+          "id": "gimg_mweh9zw9j9m5",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mweh9zw9j9m5.jpg"
+        },
+        {
+          "id": "gimg_mweh9zwvfptd",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mweh9zwvfptd.jpg"
+        },
+        {
+          "id": "gimg_mweh9zwy5b11",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mweh9zwy5b11.jpg"
+        }
+      ],
       "codeImages": [
         {
           "id": "gimg_mweh9djo831y",
