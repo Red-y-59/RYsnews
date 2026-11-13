@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RY's 表纸</title>
+  <title>RY's コンビニプリント</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,7 +26,7 @@
       <button id="nav-logo" type="button" class="flex items-center gap-2 text-left shrink-0">
         <span class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm">涼</span>
         <div class="leading-tight">
-          <div class="font-semibold text-sm sm:text-base text-slate-900">RY's 表纸</div>
+          <div class="font-semibold text-sm sm:text-base text-slate-900">RY's コンビニプリント</div>
           <div class="text-[11px] text-slate-500 hidden sm:block">便利店打印整理</div>
         </div>
       </button>
@@ -36,6 +36,7 @@
         <button type="button" data-view="home" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">首页</button>
         <button type="button" data-view="browse" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">分类浏览</button>
         <button type="button" data-view="search" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">搜索筛选</button>
+        <button type="button" data-view="guide" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition">打印指引</button>
         <button type="button" data-view="print" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5">
           <span>待打印清单</span>
           <span id="badge-print-desktop" class="px-1.5 py-0.5 text-xs rounded-full bg-rose-600 text-white font-semibold">0</span>
@@ -58,6 +59,7 @@
       <button type="button" data-view="home" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">首页</button>
       <button type="button" data-view="browse" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">分类</button>
       <button type="button" data-view="search" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">搜索</button>
+      <button type="button" data-view="guide" class="nav-btn px-2.5 py-1.5 rounded-md font-medium">指引</button>
       <button type="button" data-view="print" class="nav-btn px-2.5 py-1.5 rounded-md font-medium flex items-center gap-1">
         <span>待打印</span>
         <span id="badge-print-mobile" class="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px] font-semibold">0</span>
@@ -74,7 +76,7 @@
       <div class="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
         <form id="home-search-form" class="flex flex-col sm:flex-row gap-2.5">
           <div class="relative flex-1">
-            <input id="home-search-input" type="text" placeholder="搜索活动类别、具体活动、出版社或商品番号..." class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-400" />
+            <input id="home-search-input" type="text" placeholder="搜索活动类别、具体活动、报社或商品番号..." class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-400" />
             <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
           </div>
           <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium transition shrink-0">
@@ -92,7 +94,7 @@
       <!-- Publishers Entry -->
       <div>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="text-base sm:text-lg font-semibold text-slate-900">出版社分类入口</h2>
+          <h2 class="text-base sm:text-lg font-semibold text-slate-900">报社分类入口</h2>
           <button type="button" id="btn-home-manage-cats" class="text-xs sm:text-sm text-slate-600 hover:text-slate-900 font-medium">管理分类 →</button>
         </div>
         <div id="home-publishers-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
@@ -138,14 +140,14 @@
     <section id="view-search" class="hidden space-y-4">
       <div class="bg-white rounded-2xl border border-gray-200 p-4 space-y-3 shadow-sm">
         <div class="flex flex-col sm:flex-row gap-2.5">
-          <input id="search-keyword" type="text" placeholder="输入活动类别、活动、出版社、版面名称或商品番号..." class="flex-1 px-3.5 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15" />
+          <input id="search-keyword" type="text" placeholder="输入活动类别、活动、报社、版面名称或商品番号..." class="flex-1 px-3.5 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/15" />
           <button type="button" id="btn-reset-filters" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-sm text-slate-700 font-medium shrink-0">
             重置筛选
           </button>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
           <select id="filter-publisher" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
-            <option value="">全部出版社</option>
+            <option value="">全部报社</option>
           </select>
           <select id="filter-kind" class="px-2.5 py-2 rounded-lg border border-gray-200 text-xs sm:text-sm bg-white">
             <option value="">团体 / 个人</option>
@@ -172,6 +174,20 @@
       </div>
 
       <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    </section>
+
+    <!-- VIEW: PRINT GUIDE -->
+    <section id="view-guide" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900">便利店打印指引</h2>
+        </div>
+        <button type="button" id="btn-add-store" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium shrink-0">
+          + 新增便利店
+        </button>
+      </div>
+
+      <div id="guide-stores-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
     <!-- VIEW: PRINT LIST -->
@@ -235,7 +251,7 @@
           </div>
 
           <dl class="grid grid-cols-3 gap-y-2 text-xs sm:text-sm">
-            <dt class="text-slate-500">出版社</dt><dd id="detail-publisher" class="col-span-2 font-medium text-slate-900"></dd>
+            <dt class="text-slate-500">报社</dt><dd id="detail-publisher" class="col-span-2 font-medium text-slate-900"></dd>
             <dt class="text-slate-500">分类</dt><dd id="detail-kind" class="col-span-2 text-slate-900"></dd>
             <dt id="detail-category-label" class="text-slate-500">活动类别</dt><dd id="detail-category" class="col-span-2 font-medium text-slate-900"></dd>
             <dt class="text-slate-500">活动</dt><dd id="detail-event" class="col-span-2 text-slate-900"></dd>
@@ -285,7 +301,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-700 mb-1">出版社 *</label>
+            <label class="block text-xs font-medium text-slate-700 mb-1">报社 *</label>
             <select id="form-publisher" required class="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white"></select>
           </div>
           <div>
@@ -347,6 +363,44 @@
           <button type="submit" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium">保存版面</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Newspaper Info Edit -->
+  <div id="modal-pub" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-3">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between">
+        <h3 id="pub-modal-title" class="font-semibold text-base text-slate-900">编辑报社信息</h3>
+        <button id="pub-modal-close" type="button" class="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-slate-500">✕</button>
+      </div>
+      <form id="pub-form" class="space-y-3 text-sm">
+        <input type="hidden" id="pub-form-id" />
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">报社名称 *</label>
+          <input id="pub-form-name" type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-200" placeholder="例如：日刊スポーツ" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">官方账号（名称或链接）</label>
+          <input id="pub-form-account" type="text" class="w-full px-3 py-2 rounded-xl border border-gray-200" placeholder="例如：@nikkansports 或 https://x.com/..." />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">打印须知</label>
+          <textarea id="pub-form-notes" rows="4" class="w-full px-3 py-2 rounded-xl border border-gray-200" placeholder="填写该报社的打印尺寸、支持便利店、注意事项等..."></textarea>
+        </div>
+        <div class="pt-1 flex justify-end gap-2">
+          <button type="button" id="pub-modal-cancel" class="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-sm font-medium">取消</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Guide Image Preview -->
+  <div id="modal-guide-preview" class="fixed inset-0 z-50 hidden bg-black/80 flex items-center justify-center p-3">
+    <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+      <button id="guide-preview-close" type="button" class="absolute -top-10 right-0 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center">✕</button>
+      <img id="guide-preview-img" src="" alt="打印指引" class="max-h-[85vh] max-w-full object-contain rounded-xl bg-white" />
+      <div id="guide-preview-caption" class="mt-2 text-xs text-white/90"></div>
     </div>
   </div>
 
@@ -593,6 +647,22 @@
             }
           }
         }
+        for (const store of (state.data.printGuides || [])) {
+          const allStoreImgs = [...(store.qrImages || []), ...(store.codeImages || []), ...(store.images || [])];
+          for (const gimg of allStoreImgs) {
+            if (gimg.imageUrl && gimg.imageUrl.startsWith('data:image/')) {
+              const commaIdx = gimg.imageUrl.indexOf(',');
+              if (commaIdx !== -1) {
+                const b64 = gimg.imageUrl.slice(commaIdx + 1);
+                const ext = gimg.imageUrl.includes('image/png') ? 'png' : 'jpg';
+                const imgPath = `images/${gimg.id}.${ext}`;
+                await ghPutFile(repo, branch, imgPath, b64, `Upload guide ${gimg.id}`, token);
+                gimg.imageUrl = `https://raw.githubusercontent.com/${repo}/${encodeURIComponent(branch)}/${imgPath}`;
+                imgUploaded++;
+              }
+            }
+          }
+        }
         const jsonStr = JSON.stringify(state.data, null, 2);
         await ghPutFile(repo, branch, 'archive_data.json', utf8ToBase64(jsonStr), 'Update archive_data.json', token);
         await idbSet(STORAGE_KEY, state.data);
@@ -716,10 +786,16 @@
     function createDefaultData() {
       return {
         publishers: [
-          { id: 'pub_nikkan', name: '日刊スポーツ', source: '官方X账号' },
-          { id: 'pub_chunichi', name: '中スポ', source: '官方X账号' },
-          { id: 'pub_hochi', name: 'スポーツ報知', source: '官方X账号' },
-          { id: 'pub_daily', name: 'デイリースポーツ', source: '官方X账号' }
+          { id: 'pub_nikkan', name: '日刊スポーツ', source: '官方X账号', officialAccount: '@nikkansports', printNotes: '' },
+          { id: 'pub_chunichi', name: '中スポ', source: '官方X账号', officialAccount: '@chuspo', printNotes: '' },
+          { id: 'pub_hochi', name: 'スポーツ報知', source: '官方X账号', officialAccount: '@SportsHochi', printNotes: '' },
+          { id: 'pub_daily', name: 'デイリースポーツ', source: '官方X账号', officialAccount: '@Daily_Online', printNotes: '' }
+        ],
+        printGuides: [
+          { id: 'store_711', name: 'セブン-イレブン (7-Eleven)', qrImages: [], codeImages: [] },
+          { id: 'store_lawson', name: 'ローソン (Lawson)', qrImages: [], codeImages: [] },
+          { id: 'store_famima', name: 'ファミリーマート (FamilyMart)', qrImages: [], codeImages: [] },
+          { id: 'store_ministop', name: 'ミニストップ (Ministop)', qrImages: [], codeImages: [] }
         ],
         categories: [
           { id: 'cat_concert', kind: '个人', name: '演唱会' },
@@ -871,7 +947,26 @@
         };
       });
 
-      return { publishers, categories, events, editions };
+      const defaultStores = [
+        { id: 'store_711', name: 'セブン-イレブン (7-Eleven)', qrImages: [], codeImages: [] },
+        { id: 'store_lawson', name: 'ローソン (Lawson)', qrImages: [], codeImages: [] },
+        { id: 'store_famima', name: 'ファミリーマート (FamilyMart)', qrImages: [], codeImages: [] },
+        { id: 'store_ministop', name: 'ミニストップ (Ministop)', qrImages: [], codeImages: [] }
+      ];
+      const normPubs = publishers.map(p => ({
+        ...p,
+        officialAccount: p.officialAccount ?? p.source ?? '',
+        printNotes: p.printNotes ?? ''
+      }));
+      const printGuides = Array.isArray(raw.printGuides) && raw.printGuides.length > 0
+        ? raw.printGuides.map(g => ({
+            id: g.id,
+            name: g.name,
+            qrImages: Array.isArray(g.qrImages) ? g.qrImages : [],
+            codeImages: Array.isArray(g.codeImages) ? g.codeImages : (Array.isArray(g.images) ? g.images : [])
+          }))
+        : defaultStores;
+      return { publishers: normPubs, categories, events, editions, printGuides };
     }
 
     let state = {
@@ -969,7 +1064,7 @@
 
     function switchView(viewName) {
       state.view = viewName;
-      ['home', 'browse', 'search', 'print'].forEach(v => {
+      ['home', 'browse', 'search', 'guide', 'print'].forEach(v => {
         document.getElementById('view-' + v).classList.toggle('hidden', v !== viewName);
       });
       document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -989,6 +1084,7 @@
       if (state.view === 'home') renderHome();
       if (state.view === 'browse') renderBrowse();
       if (state.view === 'search') renderSearch();
+      if (state.view === 'guide') renderPrintGuide();
       if (state.view === 'print') renderPrintList();
     }
 
@@ -1052,12 +1148,14 @@
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'bg-white rounded-2xl border border-gray-200 p-3.5 text-left hover:border-slate-400 hover:shadow-xs transition';
+        const accText = pub.officialAccount || pub.source || '暂无官方账号';
         btn.innerHTML = `
           <div class="flex items-center justify-between gap-2">
             <div class="font-semibold text-sm sm:text-base text-slate-900 truncate">${pub.name}</div>
             <span class="text-xs text-slate-400 shrink-0">${count} 版面</span>
           </div>
-          <div class="text-[11px] text-slate-500 mt-1 truncate">${pub.source || '官方X账号'}</div>
+          <div class="text-[11px] text-slate-500 mt-1 truncate">${accText}</div>
+          ${pub.printNotes ? `<div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${pub.printNotes}</div>` : ''}
         `;
         btn.addEventListener('click', () => {
           state.browse = { publisherId: pub.id, kind: null, categoryId: null, eventId: null };
@@ -1087,7 +1185,7 @@
       const content = document.getElementById('browse-content');
       content.innerHTML = '';
 
-      const crumbs = [{ label: '全部出版社', action: () => { state.browse = { publisherId: null, kind: null, categoryId: null, eventId: null }; renderBrowse(); } }];
+      const crumbs = [{ label: '全部报社', action: () => { state.browse = { publisherId: null, kind: null, categoryId: null, eventId: null }; renderBrowse(); } }];
       const pub = publisherId ? getPublisher(publisherId) : null;
       const cat = categoryId ? getCategory(categoryId) : null;
       const evt = eventId ? getEvent(eventId) : null;
@@ -1121,20 +1219,17 @@
 
       // Publishers
       if (!publisherId) {
-        titleEl.textContent = '选择出版社';
-        subEl.textContent = '支持新增、修改或删除出版社';
-        addBtn.textContent = '+ 新增出版社';
+        titleEl.textContent = '选择报社';
+        subEl.textContent = '支持新增、修改或删除报社及信息介绍';
+        addBtn.textContent = '+ 新增报社';
         addBtn.classList.remove('hidden');
-        addBtn.onclick = () => openCatModal('新增出版社', '', (val) => {
-          state.data.publishers.push({ id: uid('pub'), name: val, source: '官方X账号' });
-          saveData();
-          renderBrowse();
-        });
+        addBtn.onclick = () => openPubModal(null);
 
         const grid = document.createElement('div');
         grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3';
         state.data.publishers.forEach(p => {
           const cnt = state.data.editions.filter(e => e.publisherId === p.id).length;
+          const accText = p.officialAccount || p.source || '';
           const card = document.createElement('div');
           card.className = 'bg-white rounded-2xl border border-gray-200 p-4 flex flex-col justify-between gap-3 hover:border-slate-400 transition cursor-pointer';
           card.innerHTML = `
@@ -1143,20 +1238,22 @@
                 <div class="text-base font-semibold text-slate-900">${p.name}</div>
                 <span class="text-xs text-slate-500 shrink-0">${cnt} 张版面</span>
               </div>
+              ${accText ? `<div class="text-xs text-slate-500 mt-1 truncate">官方账号：${accText}</div>` : ''}
+              ${p.printNotes ? `<div class="text-xs text-slate-400 mt-1 line-clamp-2">${p.printNotes}</div>` : ''}
             </div>
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100 text-xs">
-              <button type="button" class="cat-edit text-slate-500 hover:text-slate-900">重命名</button>
+              <button type="button" class="cat-edit text-slate-500 hover:text-slate-900">编辑信息</button>
               <button type="button" class="cat-del text-rose-500 hover:text-rose-700">删除</button>
             </div>
           `;
           card.addEventListener('click', () => { state.browse = { publisherId: p.id, kind: null, categoryId: null, eventId: null }; renderBrowse(); });
           card.querySelector('.cat-edit').addEventListener('click', (e) => {
             e.stopPropagation();
-            openCatModal('重命名出版社', p.name, (val) => { p.name = val; saveData(); renderBrowse(); });
+            openPubModal(p.id);
           });
           card.querySelector('.cat-del').addEventListener('click', (e) => {
             e.stopPropagation();
-            openConfirmModal(`删除出版社「${p.name}」`, '删除后将同时移除该出版社下的分类和版面记录，确定继续吗？', () => {
+            openConfirmModal(`删除报社「${p.name}」`, '删除后将同时移除该报社下的分类和版面记录，确定继续吗？', () => {
               state.data.publishers = state.data.publishers.filter(x => x.id !== p.id);
               state.data.editions = state.data.editions.filter(x => x.publisherId !== p.id);
               saveData();
@@ -1174,6 +1271,23 @@
         titleEl.textContent = `${pub.name} · 团体 / 个人`;
         subEl.textContent = '同一场活动若同时有团体和个人版面，可分别归档';
         addBtn.classList.add('hidden');
+
+        const infoCard = document.createElement('div');
+        infoCard.className = 'bg-white rounded-2xl border border-gray-200 p-4 mb-4 space-y-2';
+        const acc = pub.officialAccount || pub.source || '';
+        const accHtml = acc.startsWith('http')
+          ? `<a href="${acc}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline break-all">${acc}</a>`
+          : `<span class="text-slate-800">${acc || '未填写'}</span>`;
+        infoCard.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-slate-900">报社信息介绍</span>
+            <button type="button" id="btn-edit-pub-inline" class="text-xs text-blue-600 hover:underline">编辑信息</button>
+          </div>
+          <div class="text-xs text-slate-600"><span class="text-slate-400">官方账号：</span>${accHtml}</div>
+          <div class="text-xs text-slate-600 whitespace-pre-wrap"><span class="text-slate-400">打印须知：</span>${pub.printNotes ? pub.printNotes : '<span class="text-slate-400">暂无，点击右上角「编辑信息」添加</span>'}</div>
+        `;
+        infoCard.querySelector('#btn-edit-pub-inline').addEventListener('click', () => openPubModal(pub.id));
+        content.appendChild(infoCard);
 
         const grid = document.createElement('div');
         grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-4';
@@ -1339,7 +1453,7 @@
     function populateSearchFilters() {
       const pubSel = document.getElementById('filter-publisher');
       const curPub = pubSel.value;
-      pubSel.innerHTML = '<option value="">全部出版社</option>';
+      pubSel.innerHTML = '<option value="">全部报社</option>';
       state.data.publishers.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id;
@@ -1750,6 +1864,156 @@
       return addedCount;
     }
 
+    function openPubModal(pubId = null) {
+      const form = document.getElementById('pub-form');
+      form.reset();
+      const pub = pubId ? getPublisher(pubId) : null;
+      document.getElementById('pub-form-id').value = pub ? pub.id : '';
+      document.getElementById('pub-modal-title').textContent = pub ? '编辑报社信息' : '新增报社';
+      document.getElementById('pub-form-name').value = pub ? pub.name : '';
+      document.getElementById('pub-form-account').value = pub ? (pub.officialAccount || pub.source || '') : '';
+      document.getElementById('pub-form-notes').value = pub ? (pub.printNotes || '') : '';
+      document.getElementById('modal-pub').classList.remove('hidden');
+    }
+
+    function openGuidePreview(src, caption) {
+      document.getElementById('guide-preview-img').src = src;
+      document.getElementById('guide-preview-caption').textContent = caption || '';
+      document.getElementById('modal-guide-preview').classList.remove('hidden');
+    }
+
+    function renderGuideSection(store, fieldKey, labelText) {
+      const imgs = store[fieldKey] || [];
+      const wrap = document.createElement('div');
+      wrap.className = 'rounded-xl border border-gray-100 bg-slate-50/60 p-3 flex flex-col gap-2.5';
+
+      const head = document.createElement('div');
+      head.className = 'flex items-center justify-between gap-2';
+      head.innerHTML = `
+        <span class="text-xs font-semibold text-slate-800">${labelText}</span>
+        <label class="px-2 py-0.5 rounded-md bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-medium cursor-pointer">
+          + 上传图片
+          <input type="file" accept="image/*" multiple class="hidden" />
+        </label>
+      `;
+      head.querySelector('input').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+        if (!Array.isArray(store[fieldKey])) store[fieldKey] = [];
+        for (const f of files) {
+          try {
+            const url = await compressImageFile(f);
+            store[fieldKey].push({ id: uid('gimg'), imageUrl: url });
+          } catch (err) {}
+        }
+        e.target.value = '';
+        saveData();
+        renderPrintGuide();
+        showToast(`已添加${labelText}指引图片`);
+      });
+      wrap.appendChild(head);
+
+      if (imgs.length === 0) {
+        const emptyLabel = document.createElement('label');
+        emptyLabel.className = 'border-2 border-dashed border-gray-200 hover:border-slate-400 rounded-lg p-6 flex flex-col items-center justify-center text-slate-400 text-[11px] gap-1.5 cursor-pointer transition bg-white';
+        emptyLabel.innerHTML = `
+          <svg class="w-6 h-6 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>点击放入${labelText}图片</span>
+          <input type="file" accept="image/*" multiple class="hidden" />
+        `;
+        emptyLabel.querySelector('input').addEventListener('change', async (e) => {
+          const files = Array.from(e.target.files || []);
+          if (files.length === 0) return;
+          if (!Array.isArray(store[fieldKey])) store[fieldKey] = [];
+          for (const f of files) {
+            try {
+              const url = await compressImageFile(f);
+              store[fieldKey].push({ id: uid('gimg'), imageUrl: url });
+            } catch (err) {}
+          }
+          saveData();
+          renderPrintGuide();
+          showToast(`已添加${labelText}指引图片`);
+        });
+        wrap.appendChild(emptyLabel);
+      } else {
+        const imgGrid = document.createElement('div');
+        imgGrid.className = imgs.length === 1 ? 'grid grid-cols-1 gap-2' : 'grid grid-cols-2 gap-2';
+        imgs.forEach((imgObj, idx) => {
+          const box = document.createElement('div');
+          box.className = 'relative rounded-lg border border-gray-200 bg-white overflow-hidden cursor-pointer';
+          box.innerHTML = `
+            <img src="${imgObj.imageUrl}" alt="${store.name} ${labelText}" class="w-full max-h-64 object-contain mx-auto" />
+            <button type="button" class="img-del absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/65 hover:bg-rose-600 text-white text-[10px]">删除</button>
+          `;
+          box.querySelector('img').addEventListener('click', () => {
+            openGuidePreview(imgObj.imageUrl, `${store.name} · ${labelText} (${idx + 1}/${imgs.length})`);
+          });
+          box.querySelector('.img-del').addEventListener('click', (e) => {
+            e.stopPropagation();
+            store[fieldKey] = store[fieldKey].filter(x => x.id !== imgObj.id);
+            saveData();
+            renderPrintGuide();
+          });
+          imgGrid.appendChild(box);
+        });
+        wrap.appendChild(imgGrid);
+      }
+
+      return wrap;
+    }
+
+    function renderPrintGuide() {
+      const grid = document.getElementById('guide-stores-grid');
+      grid.innerHTML = '';
+      const stores = state.data.printGuides || [];
+      if (stores.length === 0) {
+        grid.innerHTML = '<div class="col-span-full bg-white rounded-2xl border border-gray-200 p-8 text-center text-sm text-slate-500">暂无便利店分类，点击右上角「+ 新增便利店」添加。</div>';
+        return;
+      }
+
+      stores.forEach(store => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl border border-gray-200 p-4 flex flex-col gap-3';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between gap-2 pb-2 border-b border-gray-100';
+        header.innerHTML = `
+          <div class="font-semibold text-sm sm:text-base text-slate-900 truncate">${store.name}</div>
+          <div class="flex items-center gap-2 text-xs shrink-0">
+            <button type="button" class="store-rename text-slate-500 hover:text-slate-900">重命名</button>
+            <button type="button" class="store-del text-rose-500 hover:text-rose-700">删除</button>
+          </div>
+        `;
+
+        header.querySelector('.store-rename').addEventListener('click', () => {
+          openCatModal('重命名便利店', store.name, (val) => {
+            store.name = val;
+            saveData();
+            renderPrintGuide();
+          });
+        });
+
+        header.querySelector('.store-del').addEventListener('click', () => {
+          openConfirmModal(`删除「${store.name}」`, '确定删除该便利店分类及其指引图片吗？', () => {
+            state.data.printGuides = state.data.printGuides.filter(x => x.id !== store.id);
+            saveData();
+            renderPrintGuide();
+          });
+        });
+
+        card.appendChild(header);
+
+        const subGrid = document.createElement('div');
+        subGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+        subGrid.appendChild(renderGuideSection(store, 'qrImages', 'QR码'));
+        subGrid.appendChild(renderGuideSection(store, 'codeImages', '番号'));
+        card.appendChild(subGrid);
+
+        grid.appendChild(card);
+      });
+    }
+
     function openCatModal(title, initialVal, onConfirm) {
       document.getElementById('cat-modal-title').textContent = title;
       const inp = document.getElementById('cat-modal-input');
@@ -1815,7 +2079,7 @@
       });
       document.getElementById('btn-export-print-csv').addEventListener('click', () => {
         const items = state.data.editions.filter(e => e.inPrintList);
-        const lines = ['出版社,分类,活动类别,活动,版面名称,截止时间,商品番号,打印状态'];
+        const lines = ['报社,分类,活动类别,活动,版面名称,截止时间,商品番号,打印状态'];
         items.forEach(i => {
           const pub = getPublisher(i.publisherId)?.name || '';
           const cat = getCategory(i.categoryId)?.name || '';
@@ -1995,6 +2259,48 @@
         saveData();
         document.getElementById('modal-form').classList.add('hidden');
         renderCurrentView();
+      });
+
+      // Newspaper info modal
+      document.getElementById('pub-modal-close').addEventListener('click', () => document.getElementById('modal-pub').classList.add('hidden'));
+      document.getElementById('pub-modal-cancel').addEventListener('click', () => document.getElementById('modal-pub').classList.add('hidden'));
+      document.getElementById('pub-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('pub-form-id').value;
+        const name = document.getElementById('pub-form-name').value.trim();
+        const officialAccount = document.getElementById('pub-form-account').value.trim();
+        const printNotes = document.getElementById('pub-form-notes').value.trim();
+        if (!name) return;
+        if (id) {
+          const pub = getPublisher(id);
+          if (pub) {
+            pub.name = name;
+            pub.officialAccount = officialAccount;
+            pub.source = officialAccount || pub.source;
+            pub.printNotes = printNotes;
+          }
+          showToast('已更新报社信息');
+        } else {
+          state.data.publishers.push({ id: uid('pub'), name, source: officialAccount, officialAccount, printNotes });
+          showToast('已新增报社');
+        }
+        saveData();
+        document.getElementById('modal-pub').classList.add('hidden');
+        renderCurrentView();
+      });
+
+      // Print guide actions
+      document.getElementById('btn-add-store').addEventListener('click', () => {
+        openCatModal('新增便利店', '', (val) => {
+          if (!state.data.printGuides) state.data.printGuides = [];
+          state.data.printGuides.push({ id: uid('store'), name: val, qrImages: [], codeImages: [] });
+          saveData();
+          renderPrintGuide();
+        });
+      });
+      document.getElementById('guide-preview-close').addEventListener('click', () => document.getElementById('modal-guide-preview').classList.add('hidden'));
+      document.getElementById('modal-guide-preview').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-guide-preview') document.getElementById('modal-guide-preview').classList.add('hidden');
       });
 
       // Category modal
