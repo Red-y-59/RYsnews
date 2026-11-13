@@ -2357,16 +2357,7 @@
       "id": "store_711",
       "name": "セブン-イレブン (7-Eleven)",
       "qrImages": [],
-      "codeImages": [
-        {
-          "id": "gimg_mweemxxyjtzc",
-          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mweemxxyjtzc.jpg"
-        },
-        {
-          "id": "gimg_mwef1yjkbx5m",
-          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mwef1yjkbx5m.jpg"
-        }
-      ]
+      "codeImages": []
     },
     {
       "id": "store_lawson",
