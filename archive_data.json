@@ -3,9 +3,9 @@
     {
       "id": "pub_nikkan",
       "name": "日刊スポーツ",
-      "source": "官方X账号",
-      "officialAccount": "官方X账号",
-      "printNotes": ""
+      "source": "@nikkan_print",
+      "officialAccount": "@nikkan_print",
+      "printNotes": "A4光面纸仅在罗森、全家和Ministop便利店有售"
     },
     {
       "id": "pub_chunichi",
