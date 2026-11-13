@@ -3,32 +3,44 @@
     {
       "id": "pub_nikkan",
       "name": "日刊スポーツ",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     },
     {
       "id": "pub_chunichi",
       "name": "中スポ",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     },
     {
       "id": "pub_hochi",
       "name": "スポーツ報知",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     },
     {
       "id": "pub_daily",
       "name": "デイリースポーツ",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     },
     {
       "id": "pub_mwdj9szgu35a",
       "name": "サンスポEXTRA",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     },
     {
       "id": "pub_mwdk20zibepw",
       "name": "スポプリ",
-      "source": "官方X账号"
+      "source": "官方X账号",
+      "officialAccount": "官方X账号",
+      "printNotes": ""
     }
   ],
   "categories": [
@@ -2338,6 +2350,37 @@
       "createdAt": 1794475278581,
       "categoryId": "",
       "deadline": "2027-01-03"
+    }
+  ],
+  "printGuides": [
+    {
+      "id": "store_711",
+      "name": "セブン-イレブン (7-Eleven)",
+      "qrImages": [],
+      "codeImages": [
+        {
+          "id": "gimg_mweemxxyjtzc",
+          "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/gimg_mweemxxyjtzc.jpg"
+        }
+      ]
+    },
+    {
+      "id": "store_lawson",
+      "name": "ローソン (Lawson)",
+      "qrImages": [],
+      "codeImages": []
+    },
+    {
+      "id": "store_famima",
+      "name": "ファミリーマート (FamilyMart)",
+      "qrImages": [],
+      "codeImages": []
+    },
+    {
+      "id": "store_ministop",
+      "name": "ミニストップ (Ministop)",
+      "qrImages": [],
+      "codeImages": []
     }
   ]
 }
