@@ -1297,23 +1297,6 @@
       "createdAt": 1794487135153
     },
     {
-      "id": "ed_mwdiibhjnjx0",
-      "publisherId": "pub_daily",
-      "kind": "个人",
-      "categoryId": "cat_mwdguh80r20q",
-      "eventId": "evt_mwdguh809obf",
-      "title": "山田涼介カードゲーム新ＣＭ発表会②",
-      "deadline": "2026-11-19",
-      "productType": "便利店打印",
-      "productCode": "DSP26A20",
-      "sourceUrl": "",
-      "notes": "A3・300円\nA4光沢紙・300円",
-      "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/ed_mwdiibhjnjx0.jpg",
-      "inPrintList": false,
-      "printed": false,
-      "createdAt": 1794485792935
-    },
-    {
       "id": "ed_mwdih86vi3y9",
       "publisherId": "pub_daily",
       "kind": "个人",
