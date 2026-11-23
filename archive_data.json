@@ -266,6 +266,23 @@
   ],
   "editions": [
     {
+      "id": "ed_mwszirfnyf1d",
+      "publisherId": "pub_mwdj9szgu35a",
+      "kind": "个人",
+      "categoryId": "cat_mwdguh80r20q",
+      "eventId": "evt_mwrf8d9mqulx",
+      "title": "2026年11月22日付Hey!Say!JUMP山田涼介「バトルプリンス」③",
+      "deadline": "2027-11-22",
+      "productType": "便利店打印",
+      "productCode": "SAE26B23",
+      "sourceUrl": "",
+      "notes": "300",
+      "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/ed_mwszirfnyf1d.jpg",
+      "inPrintList": false,
+      "printed": false,
+      "createdAt": 1795421359715
+    },
+    {
       "id": "ed_mwsz8kkhvw9r",
       "publisherId": "pub_mwdj9szgu35a",
       "kind": "个人",
