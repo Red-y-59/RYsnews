@@ -266,6 +266,23 @@
   ],
   "editions": [
     {
+      "id": "ed_mwyp17445yc0",
+      "publisherId": "pub_nikkan",
+      "kind": "个人",
+      "categoryId": "cat_mwdguh80r20q",
+      "eventId": "evt_mwrf8d9mqulx",
+      "title": "2026年11月22日 Hey!Say!JUMP山田涼介ゲーム中は「バトルプリンス」",
+      "deadline": "",
+      "productType": "便利店打印",
+      "productCode": "NSD26B22",
+      "sourceUrl": "",
+      "notes": "300",
+      "imageUrl": "https://raw.githubusercontent.com/red-y-59/RYsnews/main/images/ed_mwyp17445yc0.jpg",
+      "inPrintList": false,
+      "printed": false,
+      "createdAt": 1795766541124
+    },
+    {
       "id": "ed_mwszirfnyf1d",
       "publisherId": "pub_mwdj9szgu35a",
       "kind": "个人",
